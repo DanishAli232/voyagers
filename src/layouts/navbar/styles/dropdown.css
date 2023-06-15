@@ -1,0 +1,83 @@
+.dropdown-large {
+  position: static !important;
+}
+.dropdown-menu-large {
+  margin-left: 16px;
+  margin-right: 16px;
+  padding: 20px 0px;
+}
+.dropdown-menu-large > li > ul {
+  padding: 0;
+  margin: 0;
+}
+.dropdown-menu-large > li > ul > li {
+  list-style: none;
+}
+.dropdown-menu-large > li > ul > li > a,
+.inn-dropdown li a {
+  display: block;
+  padding: 8px 20px 8px 0;
+  clear: both;
+}
+.dropdown-menu-large > li ul > li > a:hover,
+.dropdown-menu-large > li ul > li > a:focus,
+.inn-dropdown li a:hover,
+.inn-dropdown li a:focus {
+  text-decoration: none;
+}
+.dropdown-menu-large .disabled > a,
+.dropdown-menu-large .disabled > a:hover,
+.dropdown-menu-large .disabled > a:focus {
+  color: #999999;
+}
+.dropdown-menu-large .disabled > a:hover,
+.dropdown-menu-large .disabled > a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  cursor: not-allowed;
+}
+.dropdown-menu-large .dropdown-header {
+  font-family: "Bebas Neue";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+  color: #f1a501;
+  padding: 0px;
+}
+li {
+  list-style: none;
+}
+ul.dropdown-menu.dropdown-menu-large.row {
+  background: rgba(33, 40, 50, 1);
+  border-radius: 16px;
+  padding: 40px 50px 40px 20px;
+}
+ul.dropdown-menu.dropdown-menu-large a {
+  color: white;
+}
+@media (min-width: 480px) {
+  ul.dropdown-menu.dropdown-menu-large li.col-sm-6:not(:last-child),
+  ul.dropdown-menu.dropdown-menu-large li.col-sm-2:nth-child(2),
+  ul.dropdown-menu.dropdown-menu-large li.col-sm-2:nth-child(3) {
+    border-right: 1px dashed rgba(255, 255, 255, 0.32);
+  }
+}
+@media (max-width: 768px) {
+  .dropdown-menu-large {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .dropdown-menu-large > li {
+    margin-bottom: 30px;
+  }
+  .dropdown-menu-large > li:last-child {
+    margin-bottom: 0;
+  }
+  .dropdown-menu-large .dropdown-header {
+    padding: 3px 15px !important;
+  }
+}

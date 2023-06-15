@@ -1,0 +1,25 @@
+#nav-section .welcome-message {
+  font-family: "Work Sans";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 15px;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #5e6282;
+  margin: 0;
+}
+
+#nav-section .name {
+  font-family: "Work Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: -0.04em;
+  margin: 0;
+
+  /* Black */
+
+  color: #212832;
+}

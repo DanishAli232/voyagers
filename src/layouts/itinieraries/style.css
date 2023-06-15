@@ -6,7 +6,7 @@ h1 {
 }
 
 .hero-image {
-  background-image: url("./layouts/home/img/Hero.png"); /* The image used */
+  background-image: url(../../layouts/home/img/Hero.png); /* The image used */
   background-color: #fff; /* Used if the image is unavailable */
 
   background-position: center; /* Center the image */
@@ -135,7 +135,7 @@ span.first-textbg:after {
   content: "";
   width: 400px;
   height: 19px;
-  background: url(./layouts/home/img/Decore.png) no-repeat;
+  background: url(../../layouts/home/img/Decore.png) no-repeat;
   position: absolute;
   background-size: 100%;
   top: 100px;
@@ -169,7 +169,7 @@ button.btn.btn-ply.navbar-btn {
 /*------------------------second part ------------------------------------------*/
 .second-part {
   padding: 70px 15px;
-  background-image: url(layouts/home/img/second-partimg.png); /* The image used */
+  background-image: url("../../layouts/home/img/second-partimg.png"); /* The image used */
   background-color: #fff;
   background-attachment: scroll;
   background-position: 95% 28%;
@@ -264,7 +264,7 @@ section.topsaling {
   content: "";
   width: 400px;
   height: 19px;
-  background: url(./layouts/home/img/Decore.png) no-repeat;
+  background: url(../../layouts/home/img/Decore.png) no-repeat;
   position: absolute;
   background-size: 100%;
   top: 87px;
@@ -430,7 +430,7 @@ a.bootom.carousel-control-next {
 /*++++++++++++++++++++++++++++++++++++/*/
 /*------------------------footer part ------------------------------------------*/
 .page-footer {
-  background-image: url("./layouts/home/img/footerbg.png"); /* The image used */
+  background-image: url("../../layouts/home/img/footerbg.png"); /* The image used */
   background-color: #fff; /* Used if the image is unavailable */
   padding: 50px 15px 15px;
   background-position: center; /* Center the image */
@@ -464,7 +464,7 @@ a.bootom.carousel-control-next {
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 .itineraries {
-  background-image: url(./layouts/home/img/itineraries-bg.jpg);
+  background-image: url(../../layouts/home/img/itineraries-bg.jpg);
   background-color: #fff;
   background-position: center;
   background-repeat: no-repeat;
@@ -560,7 +560,7 @@ input#files {
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 .listing-bg {
-  background-image: url(./layouts/home/img/itineraries-bg.jpg);
+  background-image: url(../../layouts/home/img/itineraries-bg.jpg);
   background-color: #fff;
   background-position: center;
   background-repeat: no-repeat;
@@ -712,6 +712,15 @@ h3.price-sec span {
 }
 .left-d-itineraries {
   padding: 40px 0 0 0;
+}
+
+.card-img-top {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.card-title {
+  color: #212832;
 }
 
 /*min width*/
