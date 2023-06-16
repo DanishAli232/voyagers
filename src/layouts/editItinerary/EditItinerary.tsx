@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, ReactElement, useState } from "react";
+import { ChangeEvent, FormEvent, ReactElement, useEffect, useState } from "react";
 
 import api from "../../utils/api";
 
@@ -10,6 +10,9 @@ import img2 from "./assets/images/img2.png";
 import img3 from "./assets/images/img3.png";
 import img4 from "./assets/images/img4.png";
 import img5 from "./assets/images/img5.png";
+import { useParams } from "react-router-dom";
+
+type Params = { itineraryId: string };
 
 type Props = {};
 
@@ -38,16 +41,16 @@ type Values = {
   salesPitch: string;
   eachDetail: EachDetail[];
   details: string;
-  category: string;
+  category: string[];
 };
 
-const CreateItinerary = (props: Props) => {
+const EditItinerary = (props: Props) => {
   const [isComplete, setIsComplete] = useState(false);
   const [isErrored, setIsErrored] = useState({});
   const [currentTab, setCurrentTab] = useState(0);
   const [values, setValues] = useState<Values>({
     country: "",
-    category: "",
+    category: [],
     details: "",
     image:
       "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
@@ -81,6 +84,7 @@ const CreateItinerary = (props: Props) => {
     ],
     title: "",
   });
+  const { itineraryId } = useParams() as Params;
   const [days, setDays] = useState<number>(1);
 
   const handleChange = (e: ChangeEvent<any>) => {
@@ -111,6 +115,26 @@ const CreateItinerary = (props: Props) => {
     }
     setValues({ ...values, eachDetail: eachDetail });
   };
+
+  const getItinerary = async () => {
+    const data = (await api(`/itinerary/view/${itineraryId}`)) as { data: Values };
+    setValues({
+      eachDetail: data.data.eachDetail,
+      country: data.data.country,
+      category: data.data.category,
+      introduction: data.data.introduction,
+      price: data.data.price,
+      salesPitch: data.data.salesPitch,
+      title: data.data.title,
+      image: data.data.image,
+      details: "",
+    });
+    console.log(data);
+  };
+
+  useEffect(() => {
+    getItinerary();
+  }, []);
 
   const changeServices = (title: string, day: number) => {
     if (values.eachDetail[day - 1].services.includes(title)) {
@@ -143,7 +167,7 @@ const CreateItinerary = (props: Props) => {
     e.preventDefault();
 
     try {
-      let data = await api.post("/itinerary", values);
+      let data = await api.patch("/itinerary", { ...values, itineraryId });
       setIsComplete(true);
     } catch (error) {
       console.log(error);
@@ -513,22 +537,36 @@ const CreateItinerary = (props: Props) => {
             </label>
             <div className="row">
               <div className="col-sm-12 col-md-6 col-lg-6">
-                <div className="check-option" onClick={() => setValues({ ...values, category: "stay" })}>
-                  <input type="checkbox" />
+                <div
+                  className="check-option"
+                  onClick={() => setValues({ ...values, category: Array.from(new Set([...values.category, "stay"])) })}
+                >
+                  <input aria-selected="true" checked={values.category.includes("stay")} type="checkbox" />
                   <label className="container-radio">Stay</label>
                 </div>
-                <div className="check-option" onClick={() => setValues({ ...values, category: "taste" })}>
-                  <input type="checkbox" />
+                <div
+                  className="check-option"
+                  onClick={() => setValues({ ...values, category: Array.from(new Set([...values.category, "taste"])) })}
+                >
+                  <input type="checkbox" checked={values.category.includes("taste")} />
                   <label className="container-radio">Taste</label>
                 </div>
               </div>
               <div className="col-sm-12 col-md-6 col-lg-6">
-                <div className="check-option" onClick={() => setValues({ ...values, category: "vibe" })}>
-                  <input type="checkbox" />
+                <div
+                  className="check-option"
+                  onClick={() => setValues({ ...values, category: Array.from(new Set([...values.category, "vibe"])) })}
+                >
+                  <input type="checkbox" checked={values.category.includes("vibe")} />
                   <label className="container-radio">Vibe</label>
                 </div>
-                <div className="check-option" onClick={() => setValues({ ...values, category: "experience" })}>
-                  <input type="checkbox" />
+                <div
+                  className="check-option"
+                  onClick={() =>
+                    setValues({ ...values, category: Array.from(new Set([...values.category, "experience"])) })
+                  }
+                >
+                  <input type="checkbox" checked={values.category.includes("experience")} />
                   <label className="container-radio">Experience</label>
                 </div>
               </div>
@@ -601,19 +639,19 @@ const CreateItinerary = (props: Props) => {
                                 </label>
                               </li>
                               <li onClick={() => changeServices("room service", item.day)}>
-                                <input type="checkbox" />
+                                <input type="checkbox" checked={item.services.includes("room service")} />
                                 <label className="container-radio">Room Service</label>
                               </li>
                               <li onClick={() => changeServices("wifi", item.day)}>
-                                <input type="checkbox" />
+                                <input type="checkbox" checked={item.services.includes("wifi")} />
                                 <label className="container-radio">Wifi</label>
                               </li>
                               <li onClick={() => changeServices("mini bar", item.day)}>
-                                <input type="checkbox" />
+                                <input type="checkbox" checked={item.services.includes("mini bar")} />
                                 <label className="container-radio">Mini Bar</label>
                               </li>
                               <li onClick={() => changeServices("bath tub & shower", item.day)}>
-                                <input type="checkbox" />
+                                <input type="checkbox" checked={item.services.includes("bath tub & shower")} />
                                 <label className="container-radio">Bath Tub & Shower</label>
                               </li>
                             </ul>
@@ -822,4 +860,4 @@ const CreateItinerary = (props: Props) => {
   );
 };
 
-export default CreateItinerary;
+export default EditItinerary;

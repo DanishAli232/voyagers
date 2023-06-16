@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../utils/api";
+import { getUser } from "../../utils/utils";
 
 type Params = { itineraryId: string };
 
@@ -30,16 +31,26 @@ type Itinerary = Partial<{
   eachDetail: EachDetail[];
   details: string;
   category: string[];
+  _id?: string;
+  userId?: any;
 }>;
 
 const SingleItinerary = (props: any) => {
   const { itineraryId } = useParams() as Params;
   const [data, setData] = useState<Itinerary>({});
   const [currentTab, setCurrentTab] = useState<number>(0);
+  const [isMy, setIsMy] = useState(false);
+  const navigate = useNavigate();
 
   const getItinerary = async () => {
     try {
       let getdata = (await api(`/itinerary/view/${itineraryId}`)) as { data: Itinerary };
+
+      const user = getUser();
+
+      if (user.id === getdata.data.userId?._id) {
+        setIsMy(true);
+      }
 
       if (getdata.data) {
         setData(getdata.data);
@@ -49,9 +60,25 @@ const SingleItinerary = (props: any) => {
     }
   };
 
+  const handleCheckout = async () => {
+    try {
+      let data = await api.post("/billing/checkout", { itineraryId });
+
+      if (data.data) {
+        window.open(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChangeTab = (e: MouseEvent<any>, tab: number) => {
     e.preventDefault();
     setCurrentTab(tab);
+  };
+
+  const handleEdit = () => {
+    navigate(`/itinerary/edit/${itineraryId}`);
   };
 
   useEffect(() => {
@@ -75,8 +102,19 @@ const SingleItinerary = (props: any) => {
                   <h1>{data.title}</h1>
                   <p>{data.introduction}</p>
                   <div className="row">
+                    {isMy ? (
+                      <div className="col-md-2 col-sm-2 col-xs-3">
+                        <button onClick={handleEdit} className="btn btn-orange navbar-btn">
+                          Edit
+                        </button>
+                      </div>
+                    ) : (
+                      ""
+                    )}
                     <div className="col-md-3 col-sm-3 col-xs-4">
-                      <button className="btn btn-orange navbar-btn">Checkout</button>
+                      <button onClick={handleCheckout} className="btn btn-orange navbar-btn">
+                        Checkout
+                      </button>
                     </div>
                     <div className="col-md-4 col-sm-3 col-xs-4">
                       <h3 className="price-sec text-left">

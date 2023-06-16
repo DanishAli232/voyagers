@@ -3,6 +3,7 @@ import api from "../../utils/api";
 import "./style.css";
 import "./slider.css";
 import "./carousel.css";
+import { Link, useNavigate } from "react-router-dom";
 
 type Props = {};
 
@@ -26,13 +27,23 @@ type Itinerary = {
 
 const MyItineraries = (props: Props) => {
   const [data, setData] = useState<Itinerary[]>([]);
+  const navigate = useNavigate();
 
   const getItineraries = async () => {
     let getdata = (await api("/itinerary")) as { data: Itinerary[] };
+
     setData(getdata.data);
   };
 
+  const getUserDetails = async () => {
+    let data = await api("/billing/user-details");
+    if (!data?.data?.isCompleted) {
+      return navigate("/stripe/connect");
+    }
+  };
+
   useEffect(() => {
+    getUserDetails();
     getItineraries();
   }, []);
 
@@ -77,7 +88,7 @@ const MyItineraries = (props: Props) => {
                     <div className="card-slid">
                       {data.map((each) => (
                         <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12" key={each._id}>
-                          <div className="card">
+                          <Link style={{ textDecoration: "none" }} to={`/itinerary/view/${each._id}`} className="card">
                             <img className="card-img-top" src={each.image} alt="Card image" style={{ width: "100%" }} />
                             <div className="badge">
                               <p>{each.category[0]}</p>
@@ -89,7 +100,7 @@ const MyItineraries = (props: Props) => {
                                 <span className="b">Tichelle Richards</span>
                               </div>
                             </div>
-                          </div>
+                          </Link>
                         </div>
                       ))}
                       {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">

@@ -1,0 +1,32 @@
+.main-stripe {
+  width: 100%;
+  height: calc(100vh - 95px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-stripe h2 {
+  color: #635bff;
+  font-weight: bolder;
+  margin-bottom: 16px;
+}
+
+.main-stripe button {
+  padding: 13px 24px;
+  margin-top: 45px;
+  outline: none;
+  border: none;
+
+  font-family: "Work Sans";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  /* identical to box height */
+
+  letter-spacing: -0.04em;
+
+  color: #ffffff;
+  background: #635bff;
+  border-radius: 8px;
+}

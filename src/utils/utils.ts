@@ -37,3 +37,23 @@ export const checkIfUserIsAuthenticated = async () => {
     return false;
   }
 };
+
+export const getUserRole = () => {
+  const token = localStorage.getItem("jwt");
+
+  if (token) {
+    const decodedToken = jwtDecode(token) as any;
+
+    if (decodedToken.role) return decodedToken.role;
+    else return false;
+  }
+};
+
+export const getUser = () => {
+  const token = localStorage.getItem("jwt");
+
+  if (token) {
+    const decodedToken = jwtDecode(token) as any;
+    return decodedToken;
+  }
+};

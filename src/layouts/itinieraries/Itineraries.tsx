@@ -28,7 +28,6 @@ type Itinerary = {
 const Itineraries = (props: Props) => {
   const [data, setData] = useState<Itinerary[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(searchParams.get("region"));
 
   const getItineraries = async () => {
     let getdata = (await api("/itinerary")) as { data: Itinerary[] };

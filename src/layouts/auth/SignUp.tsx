@@ -8,10 +8,11 @@ type State = {
   email: string;
   password: string;
   username: string;
+  role: string;
 };
 
 const SignUp = () => {
-  const [values, setValues] = useState<State>({ email: "", password: "", username: "" });
+  const [values, setValues] = useState<State>({ email: "", password: "", username: "", role: "user" });
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -20,7 +21,7 @@ const SignUp = () => {
     try {
       let data = await api.post("/users/add-user", values);
       let token = data.data?.token;
-      
+
       if (token) {
         localStorage.setItem("jwt", token);
         navigate("/");
@@ -86,6 +87,19 @@ const SignUp = () => {
                   name="password"
                 />
                 <i className="fa fa-eye-open"></i>
+                <div className="seller-opt">
+                  <label htmlFor="role">Are you a seller?</label>
+                  <input
+                    value={values.role}
+                    onChange={(e) =>
+                      setValues({ ...values, role: values.role === "seller" ? "user" : "seller" })
+                    }
+                    id="role"
+                    type="checkbox"
+                    aria-label="..."
+                  />
+                </div>
+
                 <br />
                 <p>Forgot Password?</p>
                 <br />
