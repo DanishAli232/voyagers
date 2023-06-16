@@ -1,4 +1,4 @@
-import { Link, createSearchParams, useLocation } from "react-router-dom";
+import { Link, createSearchParams, useLocation, useNavigate } from "react-router-dom";
 import { MouseEvent, useEffect, useState } from "react";
 
 import { checkIfUserIsAuthenticated } from "../../utils/utils";
@@ -7,6 +7,7 @@ import "./styles/styles.css";
 import "./styles/dropdown.css";
 import logo from "./img/logo.png";
 import dp from "./img/dp.png";
+import api from "../../utils/api";
 
 type Props = {};
 
@@ -104,7 +105,14 @@ function createGroups(array: any, groupSize: number) {
 const Navbar = (props: Props) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [user, setUser] = useState<{ role: string; _id: string; username: string }>({
+    role: "",
+    _id: "",
+    username: "",
+  });
 
   const verifyLogin = async () => {
     let isAuthenticated = await checkIfUserIsAuthenticated();
@@ -118,7 +126,23 @@ const Navbar = (props: Props) => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("jwt");
+    navigate("/auth/login");
+  };
+
+  const getUser = async () => {
+    try {
+      const user = await api("/users/get-profile");
+      console.log(user);
+      setUser(user.data.user);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
+    getUser();
     verifyLogin();
   }, [location]);
 
@@ -188,19 +212,25 @@ const Navbar = (props: Props) => {
               {isLoggedIn ? (
                 <div>
                   <ul
-                    className="nav navbar-nav navbar-right"
-                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                    className={`nav navbar-nav navbar-right dropdown dropdown-toggle ${profileOpen ? " open" : ""}`}
+                    data-toggle="dropdown"
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}
                   >
                     <li>
                       <img width="44px" height="44px" src={dp} alt="Display Picture" />
                     </li>
                     <li>
                       <p className="welcome-message">WELOME!</p>
-                      <p className="name">Name</p>
+                      <p className="name">{user.username}</p>
                     </li>
                     <li style={{ marginLeft: "13.5px" }}>
                       <i className="fa fa-angle-down"></i>
                     </li>
+
+                    <ul className="dropdown-menu profile-dropdown">
+                      <li onClick={handleLogout}>Logout</li>
+                    </ul>
                   </ul>
                 </div>
               ) : (

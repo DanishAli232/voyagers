@@ -23,3 +23,13 @@
 
   color: #212832;
 }
+
+.profile-dropdown {
+  text-align: center;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.profile-dropdown li {
+  cursor: pointer;
+}

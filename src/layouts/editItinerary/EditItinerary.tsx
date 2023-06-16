@@ -91,29 +91,53 @@ const EditItinerary = (props: Props) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const handleChangeDays = (e: ChangeEvent<HTMLInputElement>) => {
-    setDays(Number(e.target.value));
-
-    let eachDetail = [];
-    for (let i = 0; i < Number(e.target.value); i++) {
-      eachDetail.push({
-        day: i + 1,
-        stayTitle: "",
-        stayDescription: "",
-        role: "user",
-        stayImages: [],
-        services: [],
-        dayTitle: "",
-        experienceDescription: "",
-        experienceImages: [],
-        highlights: "Some highlights",
-        tasteDescription: "",
-        tasteImages: [],
-        vibeDescription: "",
-        vibeImages: [],
-      });
+  const handleChangeDays = (type: string) => {
+    // setDays(Number(e.target.value));
+    if (type === "+") {
+      let detail = [
+        ...values.eachDetail,
+        {
+          day: values.eachDetail.length + 1,
+          stayTitle: "",
+          stayDescription: "",
+          role: "user",
+          stayImages: [],
+          services: [],
+          dayTitle: "",
+          experienceDescription: "",
+          experienceImages: [],
+          highlights: "Some highlights",
+          tasteDescription: "",
+          tasteImages: [],
+          vibeDescription: "",
+          vibeImages: [],
+        },
+      ];
+      setValues({ ...values, eachDetail: detail });
+    } else if (type === "-") {
+      setValues({ ...values, eachDetail: values.eachDetail.slice(0, values.eachDetail.length - 1) });
     }
-    setValues({ ...values, eachDetail: eachDetail });
+
+    // let eachDetail = [];
+    // for (let i = 0; i < Number(e.target.value); i++) {
+    //   eachDetail.push({
+    //     day: i + 1,
+    //     stayTitle: "",
+    //     stayDescription: "",
+    //     role: "user",
+    //     stayImages: [],
+    //     services: [],
+    //     dayTitle: "",
+    //     experienceDescription: "",
+    //     experienceImages: [],
+    //     highlights: "Some highlights",
+    //     tasteDescription: "",
+    //     tasteImages: [],
+    //     vibeDescription: "",
+    //     vibeImages: [],
+    //   });
+    // }
+    // setValues({ ...values, eachDetail: eachDetail });
   };
 
   const getItinerary = async () => {
@@ -129,7 +153,6 @@ const EditItinerary = (props: Props) => {
       image: data.data.image,
       details: "",
     });
-    console.log(data);
   };
 
   useEffect(() => {
@@ -488,26 +511,48 @@ const EditItinerary = (props: Props) => {
             />
             <br />
 
-            <label className="control-label" htmlFor="days">
-              Days
-            </label>
-            <input
-              type="number"
-              value={days}
-              onChange={handleChangeDays}
-              onKeyDown={(event) => {
-                if (!/[0-9|Backspace|Delete]/.test(event.key)) {
-                  event.preventDefault();
-                }
-              }}
-              formEncType="number"
-              className="form-control"
-              id="days"
-              itemType="number"
-              placeholder="Enter Days"
-              name="days"
-            />
+            <div>
+              <div>
+                <label className="control-label" htmlFor="days">
+                  Days
+                </label>
+              </div>
+              <div className="days-input">
+                <input
+                  type="number"
+                  value={days}
+                  onKeyDown={(event) => {
+                    if (!/[0-9|Backspace|Delete]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                  formEncType="number"
+                  disabled
+                  id="days"
+                  className="form-control"
+                  itemType="number"
+                  placeholder="Enter Days"
+                  name="days"
+                />
+              </div>
+
+              <span
+                onClick={() => handleChangeDays("+")}
+                className="glyphicon glyphicon-plus"
+                style={{ marginLeft: "10px", cursor: "pointer" }}
+                aria-hidden="true"
+              ></span>
+
+              <span
+                onClick={() => handleChangeDays("-")}
+                className="glyphicon glyphicon-minus"
+                style={{ marginLeft: "10px", cursor: "pointer" }}
+                aria-hidden="true"
+              ></span>
+            </div>
+
             <br />
+
             <label className="control-label" htmlFor="introduction">
               Introduction
             </label>

@@ -3,6 +3,9 @@ import api from "../../utils/api";
 import "./style.css";
 import "./slider.css";
 import "./carousel.css";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
 import { Link, useNavigate } from "react-router-dom";
 
 type Props = {};
@@ -23,6 +26,26 @@ type Itinerary = {
   };
   __v: number;
   _id: string;
+};
+
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 8000, min: 3000 },
+    items: 4,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
 };
 
 const MyItineraries = (props: Props) => {
@@ -58,7 +81,9 @@ const MyItineraries = (props: Props) => {
               <div className="left-first">
                 <p className="para-first">Discover Travel Itineraries</p>
                 <h1 className="top-heading">Create NEW itinerarY</h1>
-                <button className="btn btn-orange navbar-btn">Create Itinerary</button>
+                <Link to="/itinerary/create">
+                  <button className="btn btn-orange navbar-btn">Create Itinerary</button>
+                </Link>
               </div>
             </div>
             <div className="col-sm-12 col-md-2 col-lg-2"></div>
@@ -85,24 +110,35 @@ const MyItineraries = (props: Props) => {
               <div id="carousel-reviews" className="carousel slide" data-ride="carousel">
                 <div className="carousel-inner">
                   <div className="item active">
-                    <div className="card-slid">
-                      {data.map((each) => (
-                        <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12" key={each._id}>
-                          <Link style={{ textDecoration: "none" }} to={`/itinerary/view/${each._id}`} className="card">
-                            <img className="card-img-top" src={each.image} alt="Card image" style={{ width: "100%" }} />
-                            <div className="badge">
-                              <p>{each.category[0]}</p>
-                            </div>
-                            <div className="card-body">
-                              <h4 className="card-title">{each.title}</h4>
-                              <div className="subtitle">
-                                <span className="a">Created by:</span>
-                                <span className="b">Tichelle Richards</span>
+                    <div className="card-slid container">
+                      <Carousel itemClass="w-full" responsive={responsive}>
+                        {data.map((each) => (
+                          <div className="list-item" key={each._id}>
+                            <Link
+                              style={{ textDecoration: "none" }}
+                              to={`/itinerary/view/${each._id}`}
+                              className="card"
+                            >
+                              <img
+                                className="card-img-top"
+                                src={each.image}
+                                alt="Card image"
+                                style={{ width: "100%" }}
+                              />
+                              <div className="badge">
+                                <p>{each.category[0]}</p>
                               </div>
-                            </div>
-                          </Link>
-                        </div>
-                      ))}
+                              <div className="card-body">
+                                <h4 className="card-title">{each.title}</h4>
+                                <div className="subtitle">
+                                  <span className="a">Created by:</span>
+                                  <span className="b">Tichelle Richards</span>
+                                </div>
+                              </div>
+                            </Link>
+                          </div>
+                        ))}
+                      </Carousel>
                       {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                         <div className="card">
                           <img
@@ -166,16 +202,6 @@ const MyItineraries = (props: Props) => {
                     </div>
                   </div>
                 </div>
-                <a className="left carousel-control" href="#carousel-reviews" role="button" data-slide="prev">
-                  <i id="right" className="fa fa-angle-left">
-                    {" "}
-                  </i>
-                </a>
-                <a className="right carousel-control" href="#carousel-reviews" role="button" data-slide="next">
-                  <i id="right" className="fa fa-angle-right">
-                    {" "}
-                  </i>
-                </a>
               </div>
             </div>
           </div>

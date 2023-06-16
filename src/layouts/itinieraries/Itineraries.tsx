@@ -5,6 +5,9 @@ import "./slider.css";
 import "./carousel.css";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
 type Props = {};
 
 type Itinerary = {
@@ -25,9 +28,30 @@ type Itinerary = {
   _id: string;
 };
 
+const responsive = {
+  superLargeDesktop: {
+    // the naming can be any, depends on you.
+    breakpoint: { max: 8000, min: 3000 },
+    items: 4,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
 const Itineraries = (props: Props) => {
   const [data, setData] = useState<Itinerary[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedTab, setselectedTab] = useState("");
 
   const getItineraries = async () => {
     let getdata = (await api("/itinerary")) as { data: Itinerary[] };
@@ -58,32 +82,32 @@ const Itineraries = (props: Props) => {
               <div className="tabbable-panel listingtabs">
                 <div className="tabbable-line">
                   <ul className="nav nav-tabs text-center">
-                    <li className="active">
-                      <a href="#tab_default_1" data-toggle="tab">
+                    <li className={`${selectedTab === "" ? "active" : ""}`}>
+                      <a href="#tab_default_1" onClick={() => setselectedTab("")} data-toggle="tab">
                         {" "}
                         All Itineraries
                       </a>
                     </li>
-                    <li>
-                      <a href="#tab_default_2" data-toggle="tab">
+                    <li className={`${selectedTab === "stay" ? "active" : ""}`}>
+                      <a href="#tab_default_2" data-toggle="tab" onClick={() => setselectedTab("stay")}>
                         {" "}
                         Stay
                       </a>
                     </li>
-                    <li>
-                      <a href="#tab_default_3" data-toggle="tab">
+                    <li className={`${selectedTab === "taste" ? "active" : ""}`}>
+                      <a href="#tab_default_3" data-toggle="tab" onClick={() => setselectedTab("taste")}>
                         {" "}
                         Taste
                       </a>
                     </li>
-                    <li>
-                      <a href="#tab_default_4" data-toggle="tab">
+                    <li className={`${selectedTab === "vibe" ? "active" : ""}`}>
+                      <a href="#tab_default_4" data-toggle="tab" onClick={() => setselectedTab("vibe")}>
                         {" "}
                         Vibe
                       </a>
                     </li>
-                    <li>
-                      <a href="#tab_default_5" data-toggle="tab">
+                    <li className={`${selectedTab === "experience" ? "active" : ""}`}>
+                      <a href="#tab_default_5" data-toggle="tab" onClick={() => setselectedTab("experience")}>
                         {" "}
                         Experience
                       </a>
@@ -109,32 +133,36 @@ const Itineraries = (props: Props) => {
                               <div className="carousel-inner">
                                 <div className="item active">
                                   <div className="card-slid">
-                                    {data.map((each) => (
-                                      <div key={each._id} className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <Link
-                                          style={{ textDecoration: "none" }}
-                                          to={`/itinerary/view/${each._id}`}
-                                          className="card"
-                                        >
-                                          <img
-                                            className="card-img-top"
-                                            src={each.image}
-                                            alt="Card image"
-                                            style={{ width: "100%" }}
-                                          />
-                                          <div className="badge">
-                                            <p>{each.category[0]}</p>
+                                    <Carousel itemClass="w-full" responsive={responsive}>
+                                      {data
+                                        .filter((each) => (selectedTab ? each.category.includes(selectedTab) : true))
+                                        .map((each) => (
+                                          <div key={each._id} className="list-item">
+                                            <Link
+                                              style={{ textDecoration: "none" }}
+                                              to={`/itinerary/view/${each._id}`}
+                                              className="card"
+                                            >
+                                              <img
+                                                className="card-img-top"
+                                                src={each.image}
+                                                alt="Card image"
+                                                style={{ width: "100%" }}
+                                              />
+                                              <div className="badge">
+                                                <p>{each.category[0]}</p>
+                                              </div>
+                                              <div className="card-body">
+                                                <h4 className="card-title">{each.title}</h4>
+                                                <div className="subtitle">
+                                                  <span className="a">Created by:</span>
+                                                  <span className="b">{each.userId.username}</span>
+                                                </div>
+                                              </div>
+                                            </Link>
                                           </div>
-                                          <div className="card-body">
-                                            <h4 className="card-title">{each.title}</h4>
-                                            <div className="subtitle">
-                                              <span className="a">Created by:</span>
-                                              <span className="b">{each.userId.username}</span>
-                                            </div>
-                                          </div>
-                                        </Link>
-                                      </div>
-                                    ))}
+                                        ))}
+                                    </Carousel>
                                     {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                       <div className="card">
                                         <img
@@ -198,27 +226,6 @@ const Itineraries = (props: Props) => {
                                   </div>
                                 </div>
                               </div>
-
-                              <a
-                                className="left carousel-control"
-                                href="#carousel-reviews"
-                                role="button"
-                                data-slide="prev"
-                              >
-                                <i id="right" className="fa fa-angle-left">
-                                  {" "}
-                                </i>
-                              </a>
-                              <a
-                                className="right carousel-control"
-                                href="#carousel-reviews"
-                                role="button"
-                                data-slide="next"
-                              >
-                                <i id="right" className="fa fa-angle-right">
-                                  {" "}
-                                </i>
-                              </a>
                             </div>
                           </div>
                         </div>

@@ -34,7 +34,7 @@ type Values = {
   title: string;
   price: string;
   introduction: string;
-  image: string;
+  image?: File | undefined;
   salesPitch: string;
   eachDetail: EachDetail[];
   details: string;
@@ -49,8 +49,7 @@ const CreateItinerary = (props: Props) => {
     country: "",
     category: "",
     details: "",
-    image:
-      "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+
     introduction: "",
     price: "",
     salesPitch: "",
@@ -139,11 +138,27 @@ const CreateItinerary = (props: Props) => {
     setValues({ ...values, eachDetail: newData });
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, image: e.target?.files?.[0] });
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      let data = await api.post("/itinerary", values);
+      const formData = new FormData() as any;
+
+      Object.entries(values).forEach(([key, value]) => {
+        if (value && key !== "eachDetail") {
+          console.log(key, value);
+
+          formData.append(key, value);
+        } else if (key === "eachDetail") {
+          formData.append(key, JSON.stringify(values.eachDetail));
+        }
+      });
+
+      let data = await api.post("/itinerary", formData, { headers: { "Content-Type": "multipart/form-data" } });
       setIsComplete(true);
     } catch (error) {
       console.log(error);
@@ -428,6 +443,8 @@ const CreateItinerary = (props: Props) => {
         <div className="row">
           <div className="col-sm-12 col-md-6 col-lg-6">
             <div className="upload-file">
+              <input type="file" onChange={handleFileChange} />
+
               <img src={upload} alt="Upload" />
               <p>Drag your thumbnail here</p>
               <a href="" type="Submit">
