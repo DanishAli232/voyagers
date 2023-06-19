@@ -145,9 +145,13 @@ const CreateItinerary = (props: Props) => {
     setValues({ ...values, image: e.target?.files?.[0] });
   };
 
-  const handlefilesChange = (e: ChangeEvent<any>, day: number) => {
+  const handlefilesChange = (
+    e: ChangeEvent<any>,
+    day: number,
+    type: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages"
+  ) => {
     let eachDetail = values.eachDetail.map((each) => {
-      if (each.day === day) return { ...each, stayImages: [...(each.stayImages || []), ...e.target.files] };
+      if (each.day === day) return { ...each, [type]: [...(each[type] || []), ...e.target.files] };
       else return each;
     }) as EachDetail[];
 
@@ -225,11 +229,14 @@ const CreateItinerary = (props: Props) => {
     e.preventDefault();
   };
 
-  const handleDropImages = (e: DragEvent<HTMLDivElement>, day: number) => {
+  const handleDropImages = (
+    e: DragEvent<HTMLDivElement>,
+    day: number,
+    type: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages"
+  ) => {
     e.preventDefault();
     let eachDetail = values.eachDetail.map((each) => {
-      if (each.day === day)
-        return { ...each, stayImages: [...(each.stayImages || []), ...Array.from(e.dataTransfer.files)] };
+      if (each.day === day) return { ...each, [type]: [...(each[type] || []), ...Array.from(e.dataTransfer.files)] };
       else return each;
     }) as EachDetail[];
 
@@ -801,7 +808,7 @@ const CreateItinerary = (props: Props) => {
                         </div>
                         <div
                           className="col-md-6"
-                          onDrop={(e) => handleDropImages(e, item.day)}
+                          onDrop={(e) => handleDropImages(e, item.day, "stayImages")}
                           onDragOver={handleDragImagesOver}
                         >
                           <div className="upload-file">
@@ -812,7 +819,7 @@ const CreateItinerary = (props: Props) => {
                                 type="file"
                                 multiple
                                 style={{ display: "none" }}
-                                onChange={(e) => handlefilesChange(e, item.day)}
+                                onChange={(e) => handlefilesChange(e, item.day, "stayImages")}
                               />
                               <label htmlFor={`day${item.day}image`} style={{ textDecoration: "underline" }}>
                                 Upload from your device
@@ -860,32 +867,47 @@ const CreateItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "tasteImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src={upload} />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}taste-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "tasteImages")}
+                              />
+                              <label htmlFor={`day${item.day}taste-image`} style={{ textDecoration: "underline" }}>
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
+
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src={img1} />
+                              {item.tasteImages?.map((image) => (
+                                <li>
+                                  <i className="fa fa-window-close"></i>
+                                  <img src={URL.createObjectURL(image)} alt="icon" />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src={img2} />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src={img3} />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src={img4} />
-                              </li>
-                              <li>
-                                <img src={img5} />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -905,32 +927,47 @@ const CreateItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "vibeImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src={upload} />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}-vibe-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "vibeImages")}
+                              />
+                              <label htmlFor={`day${item.day}-vibe-image`} style={{ textDecoration: "underline" }}>
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
+
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src="img/img1.png" />
+                              {item.vibeImages?.map((image) => (
+                                <li>
+                                  <i className="fa fa-window-close"></i>
+                                  <img src={URL.createObjectURL(image)} alt="icon" />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img2.png" />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img3.png" />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img4.png" />
-                              </li>
-                              <li>
-                                <img src="img/img5.png" />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -952,37 +989,53 @@ const CreateItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "experienceImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src="img/Upload.png" />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}-experience-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "experienceImages")}
+                              />
+                              <label
+                                htmlFor={`day${item.day}-experience-image`}
+                                style={{ textDecoration: "underline" }}
+                              >
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
 
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src="img/img1.png" />
+                              {item.experienceImages?.map((image) => (
+                                <li>
+                                  <i className="fa fa-window-close"></i>
+                                  <img src={URL.createObjectURL(image)} alt="icon" />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img2.png" />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img3.png" />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img4.png" />
-                              </li>
-                              <li>
-                                <img src="img/img5.png" />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
-                        </div>
+                        </div>{" "}
                       </div>
                     </div>
                   </div>
