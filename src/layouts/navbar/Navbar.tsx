@@ -8,81 +8,83 @@ import "./styles/dropdown.css";
 import logo from "./img/logo.png";
 import dp from "./img/dp.png";
 import api from "../../utils/api";
+import "./styles/carousel.css";
+import "react-multi-carousel/lib/styles.css";
 
 type Props = {};
 
 const cities = {
-  "North America": [
-    "American Southwest",
-    "Aspen",
-    "Atlanta",
-    "Austin",
-    "Banff",
-    "Big Sky",
-    "Boston",
-    "CA Central Cost",
-    "Charleston",
-    "Chicago",
-    "Colorado",
-    "Dallas",
-    "Florida Keys",
-    "Hamptons",
-    "Hawaii",
-    "Jackson Hole",
-    "Joshua Tree",
-    "Lake Tahoe",
-    "Las Vegas",
-    "Los Angeles",
-    "Miami",
-    "Napa",
-    "Vermont",
-    "Nashville",
-    "New England",
-    "New Orleans",
-    "New York City",
-    "Outer Banks",
-    "Palms Springs",
-    "Park City",
-    "Paso Robles",
-    "Portland",
-    "San Diego",
-    "San Francisco",
-    "Santa Barbara",
-    "Savannah",
-    "Scottsdale",
-    "Seattle",
-    "Sedona",
-    "Sun Valley",
-    "Tampa",
-    "Telluride",
-    "Upstate New York",
-    "Vail",
-    "Washington D.C.",
+  Asia: [
+    {
+      country: "Pakistan",
+      code: "PK",
+    },
+    {
+      country: "China",
+      code: "CN",
+    },
+    {
+      country: "India",
+      code: "IN",
+    },
+    {
+      country: "Japan",
+      code: "JP",
+    },
   ],
   Europe: [
-    "Amalfi Coast",
-    "Amsterdam",
-    "Athens",
-    "Barcelona",
-    "Capri",
-    "Copenhagen",
-    "Croatia",
-    "Florence",
-    "French Riviera",
-    "Germany",
-    "Iceland",
-    "Ireland",
-    "Ischia",
-    "London",
-    "Mallorca",
-    "Milan",
-    "Mykonos",
-    "Paris",
-    "Portugal",
-    "Prague",
-    "Rome",
-    "San Sebastian",
-    "Santorini",
+    {
+      country: "Germany",
+      code: "DE",
+    },
+    {
+      country: "France",
+      code: "FR",
+    },
+    {
+      country: "Italy",
+      code: "IT",
+    },
+    {
+      country: "United Kingdom",
+      code: "GB",
+    },
+  ],
+  "North America": [
+    {
+      country: "United States",
+      code: "US",
+    },
+    {
+      country: "Canada",
+      code: "CA",
+    },
+    {
+      country: "Mexico",
+      code: "MX",
+    },
+    {
+      country: "Cuba",
+      code: "CU",
+    },
+  ],
+  "South America": [
+    {
+      country: "Brazil",
+      code: "BR",
+    },
+    {
+      country: "Argentina",
+      code: "AR",
+    },
+    {
+      country: "Colombia",
+      code: "CO",
+    },
+    {
+      country: "Peru",
+      code: "PE",
+    },
   ],
 };
 
@@ -187,10 +189,10 @@ const Navbar = (props: Props) => {
                                     <Link
                                       to={{
                                         pathname: "/itinerary/list",
-                                        search: createSearchParams({ region: item }).toString(),
+                                        search: createSearchParams({ region: item.code }).toString(),
                                       }}
                                     >
-                                      {item}
+                                      {item.country}
                                     </Link>
                                   </li>
                                 ))}

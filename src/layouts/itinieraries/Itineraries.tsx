@@ -54,13 +54,13 @@ const Itineraries = (props: Props) => {
   const [selectedTab, setselectedTab] = useState("");
 
   const getItineraries = async () => {
-    let getdata = (await api("/itinerary")) as { data: Itinerary[] };
+    let getdata = (await api(`/itinerary?region=${searchParams.get("region")}`)) as { data: Itinerary[] };
     setData(getdata.data);
   };
 
   useEffect(() => {
     getItineraries();
-  }, []);
+  }, [searchParams]);
 
   return (
     <>
