@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, ReactElement, useEffect, useState } from "react";
+import { ChangeEvent, DragEvent, FormEvent, ReactElement, useEffect, useState } from "react";
 
 import api from "../../utils/api";
 
@@ -20,16 +20,16 @@ type EachDetail = {
   day: number;
   stayTitle: string;
   stayDescription: string;
-  stayImages: string[];
+  stayImages?: File[];
   services: string[];
   dayTitle: string;
-  tasteImages: string[];
+  tasteImages?: File[];
   tasteDescription: string;
   vibeDescription: string;
-  vibeImages: string[];
+  vibeImages?: File[];
   experienceDescription: string;
   highlights: string;
-  experienceImages: string[];
+  experienceImages?: File[];
 };
 
 type Values = {
@@ -37,7 +37,7 @@ type Values = {
   title: string;
   price: string;
   introduction: string;
-  image: string;
+  image?: File;
   salesPitch: string;
   eachDetail: EachDetail[];
   details: string;
@@ -46,14 +46,13 @@ type Values = {
 
 const EditItinerary = (props: Props) => {
   const [isComplete, setIsComplete] = useState(false);
-  const [isErrored, setIsErrored] = useState({});
+  const [isErrored, setIsErrored] = useState<any>({});
   const [currentTab, setCurrentTab] = useState(0);
   const [values, setValues] = useState<Values>({
     country: "",
     category: [],
     details: "",
-    image:
-      "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+
     introduction: "",
     price: "",
     salesPitch: "",
@@ -62,24 +61,13 @@ const EditItinerary = (props: Props) => {
         day: 1,
         stayTitle: "",
         stayDescription: "",
-        stayImages: [
-          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        ],
+
         services: [],
         dayTitle: "",
         experienceDescription: "",
-        experienceImages: [
-          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        ],
         highlights: "Some highlights",
         tasteDescription: "",
-        tasteImages: [
-          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        ],
         vibeDescription: "",
-        vibeImages: [
-          "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-        ],
       },
     ],
     title: "",
@@ -176,6 +164,23 @@ const EditItinerary = (props: Props) => {
     }
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, image: e.target?.files?.[0] });
+  };
+
+  const handlefilesChange = (
+    e: ChangeEvent<any>,
+    day: number,
+    type: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages"
+  ) => {
+    let eachDetail = values.eachDetail.map((each) => {
+      if (each.day === day) return { ...each, [type]: [...(each[type] || []), ...e.target.files] };
+      else return each;
+    }) as EachDetail[];
+
+    setValues({ ...values, eachDetail });
+  };
+
   const handleChangeItem = (e: ChangeEvent<any>, day: number) => {
     let newData = values.eachDetail.map((each) => {
       if (each.day === day) {
@@ -190,11 +195,136 @@ const EditItinerary = (props: Props) => {
     e.preventDefault();
 
     try {
-      let data = await api.patch("/itinerary", { ...values, itineraryId });
-      setIsComplete(true);
-    } catch (error) {
-      console.log(error);
+      const formData = new FormData();
+
+      // Add non-file values to the formData
+      formData.append("country", values.country);
+      formData.append("title", values.title);
+      formData.append("price", values.price);
+      formData.append("category", JSON.stringify(values.category));
+      formData.append("introduction", values.introduction);
+      formData.append("salesPitch", values.salesPitch);
+      // formData.append("eachDetail", values.salesPitch);
+      // formData.append("eachDetail", JSON.stringify(values.eachDetail));
+      // Add other non-file fields to the formData
+
+      // Add image file to the formData
+      if (values.image) {
+        formData.append("image", values.image);
+      }
+
+      // Iterate through eachDetail array and add files to formData
+      values.eachDetail.forEach((each) => {
+        if (each.stayImages) {
+          each.stayImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].stayImages[${index}]`, file);
+          });
+        }
+
+        if (each.vibeImages) {
+          each.vibeImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].vibeImages[${index}]`, file);
+          });
+        }
+
+        if (each.tasteImages) {
+          each.tasteImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].tasteImages[${index}]`, file);
+          });
+        }
+
+        if (each.experienceImages) {
+          each.experienceImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].experienceImages[${index}]`, file);
+          });
+        }
+
+        // Repeat the same process for other image fields in eachDetail
+      });
+
+      let eachData = [] as any;
+
+      values.eachDetail.forEach((data) => {
+        let stayImages = data.stayImages?.filter((image) => typeof image === "string");
+        let tasteImages = data.tasteImages?.filter((image) => typeof image === "string");
+        let experienceImages = data.experienceImages?.filter((image) => typeof image === "string");
+        let vibeImages = data.vibeImages?.filter((image) => typeof image === "string");
+
+        eachData.push({
+          dayTitle: data.dayTitle,
+          experienceDescription: data.experienceDescription,
+          services: data.services,
+          highlights: data.highlights,
+          stayDescription: data.stayDescription,
+          stayTitle: data.stayTitle,
+          stayImages,
+          tasteImages,
+          experienceImages,
+          vibeImages,
+          tasteDescription: data.tasteDescription,
+          vibeDescription: data.vibeDescription,
+          day: data.day,
+        });
+      });
+
+      formData.append("eachDetail", JSON.stringify(eachData));
+
+      // Make the POST request using Axios
+      const response = await api.patch("/itinerary", formData);
+      console.log(response.data); // Handle the server response
+
+      // Reset the form or perform any other necessary actions
+    } catch (error: any) {
+      if (error.response?.data) {
+        setIsErrored(error.response?.data);
+      }
     }
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    let droppedFile = e.dataTransfer.files[0];
+    setValues({ ...values, image: droppedFile });
+  };
+
+  const handleDragImagesOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDropImages = (
+    e: DragEvent<HTMLDivElement>,
+    day: number,
+    type: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages"
+  ) => {
+    e.preventDefault();
+    let eachDetail = values.eachDetail.map((each) => {
+      if (each.day === day) return { ...each, [type]: [...(each[type] || []), ...Array.from(e.dataTransfer.files)] };
+      else return each;
+    }) as EachDetail[];
+
+    setValues({ ...values, eachDetail });
+
+    // let droppedFile = e.dataTransfer.files[0];
+    // setValues({ ...values, image: droppedFile });
+  };
+
+  const clearImage = (
+    title: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages",
+    key: number,
+    day: number
+  ) => {
+    let newValues = values.eachDetail.map((each) => {
+      if (each.day === day) {
+        return { ...each, [title]: each[title]?.filter((each, idx) => idx !== key) };
+      } else return each;
+    });
+
+    setValues({ ...values, eachDetail: newValues });
+    // values.eachDetail[day-1].
   };
 
   return (
@@ -466,6 +596,16 @@ const EditItinerary = (props: Props) => {
                 <option value="ZM">Zambia</option>
                 <option value="ZW">Zimbabwe</option>
               </select>
+
+              <p
+                style={{
+                  display: isErrored?.country ? "block" : "none",
+                  color: isErrored?.country ? "red" : "black",
+                  marginTop: "5px",
+                }}
+              >
+                {isErrored.country}
+              </p>
               <h2 className="top-heading">Please fill out the itinerary FORM below</h2>
             </div>
           </div>
@@ -473,13 +613,24 @@ const EditItinerary = (props: Props) => {
         </div>
 
         <div className="row">
-          <div className="col-sm-12 col-md-6 col-lg-6">
+          <div className="col-sm-12 col-md-6 col-lg-6" onDrop={handleDrop} onDragOver={handleDragOver}>
             <div className="upload-file">
-              <img src={upload} alt="Upload" />
+              {values.image ? (
+                <img
+                  src={typeof values.image === "string" ? values.image : URL.createObjectURL(values.image)}
+                  style={{ width: "200px" }}
+                  alt="Thumbnail"
+                />
+              ) : (
+                <img src={upload} alt="Upload" />
+              )}
               <p>Drag your thumbnail here</p>
-              <a href="" type="Submit">
-                Upload from your device
-              </a>
+              <div>
+                <input id="thumbnail" type="file" style={{ display: "none" }} onChange={handleFileChange} />
+                <label htmlFor="thumbnail" style={{ textDecoration: "underline" }}>
+                  Upload from your device
+                </label>
+              </div>
             </div>
           </div>
 
@@ -496,6 +647,16 @@ const EditItinerary = (props: Props) => {
               onChange={handleChange}
               name="title"
             />
+
+            <p
+              style={{
+                display: isErrored?.title ? "block" : "none",
+                color: isErrored?.title ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.title}
+            </p>
             <br />
             <label className="control-label" htmlFor="price">
               Price
@@ -509,6 +670,16 @@ const EditItinerary = (props: Props) => {
               placeholder="Enter Price"
               name="price"
             />
+
+            <p
+              style={{
+                display: isErrored?.price ? "block" : "none",
+                color: isErrored?.price ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.price}
+            </p>
             <br />
 
             <div>
@@ -559,6 +730,16 @@ const EditItinerary = (props: Props) => {
             <textarea name="introduction" id="introduction" value={values.introduction} onChange={handleChange}>
               Write your intro...
             </textarea>
+
+            <p
+              style={{
+                display: isErrored?.introduction ? "block" : "none",
+                color: isErrored?.introduction ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.introduction}
+            </p>
             <br />
           </div>
         </div>
@@ -574,6 +755,16 @@ const EditItinerary = (props: Props) => {
               onChange={handleChange}
               value={values.salesPitch}
             ></textarea>
+
+            <p
+              style={{
+                display: isErrored?.salesPitch ? "block" : "none",
+                color: isErrored?.salesPitch ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.salesPitch}
+            </p>
           </div>
 
           <div className="col-sm-12 col-md-6 col-lg-6">
@@ -616,6 +807,16 @@ const EditItinerary = (props: Props) => {
                 </div>
               </div>
             </div>
+
+            <p
+              style={{
+                display: isErrored?.category ? "block" : "none",
+                color: isErrored?.category ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.category}
+            </p>
           </div>
         </div>
         <div className="row ">
@@ -647,25 +848,39 @@ const EditItinerary = (props: Props) => {
                 <div className="tabbable-line">
                   <ul className="nav nav-tabs text-center">
                     <li className={`${currentTab === 0 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(0)} className={`${currentTab > 0 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(0)}
+                        className={`${currentTab > 0 ? "complete" : ""}`}
+                      >
                         Stay
                       </button>
                     </li>
 
                     <li className={`${currentTab === 1 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(1)} className={`${currentTab > 1 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(1)}
+                        className={`${currentTab > 1 ? "complete" : ""}`}
+                      >
                         Taste
                       </button>
                     </li>
 
                     <li className={`${currentTab === 2 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(2)} className={`${currentTab > 2 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(2)}
+                        className={`${currentTab > 2 ? "complete" : ""}`}
+                      >
                         Vibe
                       </button>
                     </li>
 
                     <li className={`${currentTab === 3 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(3)}>Experience</button>
+                      <button type="button" onClick={() => setCurrentTab(3)}>
+                        Experience
+                      </button>
                     </li>
                   </ul>
 
@@ -684,19 +899,19 @@ const EditItinerary = (props: Props) => {
                                 </label>
                               </li>
                               <li onClick={() => changeServices("room service", item.day)}>
-                                <input type="checkbox" checked={item.services.includes("room service")} />
+                                <input type="checkbox" />
                                 <label className="container-radio">Room Service</label>
                               </li>
                               <li onClick={() => changeServices("wifi", item.day)}>
-                                <input type="checkbox" checked={item.services.includes("wifi")} />
+                                <input type="checkbox" />
                                 <label className="container-radio">Wifi</label>
                               </li>
                               <li onClick={() => changeServices("mini bar", item.day)}>
-                                <input type="checkbox" checked={item.services.includes("mini bar")} />
+                                <input type="checkbox" />
                                 <label className="container-radio">Mini Bar</label>
                               </li>
                               <li onClick={() => changeServices("bath tub & shower", item.day)}>
-                                <input type="checkbox" checked={item.services.includes("bath tub & shower")} />
+                                <input type="checkbox" />
                                 <label className="container-radio">Bath Tub & Shower</label>
                               </li>
                             </ul>
@@ -714,22 +929,42 @@ const EditItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           />
                         </div>
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "stayImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src={upload} alt="upload" />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "stayImages")}
+                              />
+                              <label htmlFor={`day${item.day}image`} style={{ textDecoration: "underline" }}>
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
 
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src={img1} alt="icon" />
-                              </li>
-                              <li>
+                              {item.stayImages?.map((image, idx) => (
+                                <li>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("stayImages", idx, item.day)}
+                                  ></i>
+                                  <img
+                                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                                    alt="icon"
+                                  />
+                                </li>
+                              ))}
+                              {/* <li>
                                 <img src={img2} alt="icon" />
                               </li>
                               <li>
@@ -740,7 +975,7 @@ const EditItinerary = (props: Props) => {
                               </li>
                               <li>
                                 <img src={img5} alt="icon" />
-                              </li>
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -761,32 +996,53 @@ const EditItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "tasteImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src={upload} />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}taste-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "tasteImages")}
+                              />
+                              <label htmlFor={`day${item.day}taste-image`} style={{ textDecoration: "underline" }}>
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
+
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src={img1} />
+                              {item.tasteImages?.map((image, idx) => (
+                                <li>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("tasteImages", idx, item.day)}
+                                  ></i>
+                                  <img
+                                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                                    alt="icon"
+                                  />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src={img2} />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src={img3} />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src={img4} />
-                              </li>
-                              <li>
-                                <img src={img5} />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -806,32 +1062,53 @@ const EditItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "vibeImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src={upload} />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}-vibe-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "vibeImages")}
+                              />
+                              <label htmlFor={`day${item.day}-vibe-image`} style={{ textDecoration: "underline" }}>
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
+
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src="img/img1.png" />
+                              {item.vibeImages?.map((image, idx) => (
+                                <li>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("vibeImages", idx, item.day)}
+                                  ></i>
+                                  <img
+                                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                                    alt="icon"
+                                  />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img2.png" />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img3.png" />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img4.png" />
-                              </li>
-                              <li>
-                                <img src="img/img5.png" />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -853,37 +1130,59 @@ const EditItinerary = (props: Props) => {
                             placeholder="Write your detail...."
                           ></textarea>
                         </div>
-
-                        <div className="col-md-6">
+                        <div
+                          className="col-md-6"
+                          onDrop={(e) => handleDropImages(e, item.day, "experienceImages")}
+                          onDragOver={handleDragImagesOver}
+                        >
                           <div className="upload-file">
-                            <img src="img/Upload.png" />
-                            <p>Drag your thumbnail here</p>
-                            <a href="" type="Submit">
-                              Upload from your device
-                            </a>
+                            <p>Drag your images here</p>
+                            <div>
+                              <input
+                                id={`day${item.day}-experience-image`}
+                                type="file"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => handlefilesChange(e, item.day, "experienceImages")}
+                              />
+                              <label
+                                htmlFor={`day${item.day}-experience-image`}
+                                style={{ textDecoration: "underline" }}
+                              >
+                                Upload from your device
+                              </label>
+                            </div>
                           </div>
 
                           <div className="images-upload">
                             <ul>
-                              <li>
-                                <i className="fa fa-window-close"></i>
-                                <img src="img/img1.png" />
+                              {item.experienceImages?.map((image, idx) => (
+                                <li>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("experienceImages", idx, item.day)}
+                                  ></i>
+                                  <img
+                                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                                    alt="icon"
+                                  />
+                                </li>
+                              ))}
+                              {/* <li>
+                                <img src={img2} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img2.png" />
+                                <img src={img3} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img3.png" />
+                                <img src={img4} alt="icon" />
                               </li>
                               <li>
-                                <img src="img/img4.png" />
-                              </li>
-                              <li>
-                                <img src="img/img5.png" />
-                              </li>
+                                <img src={img5} alt="icon" />
+                              </li> */}
                             </ul>
                           </div>
-                        </div>
+                        </div>{" "}
                       </div>
                     </div>
                   </div>

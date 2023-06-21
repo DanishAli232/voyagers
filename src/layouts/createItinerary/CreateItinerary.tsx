@@ -83,7 +83,6 @@ const CreateItinerary = (props: Props) => {
     title: "",
   });
   const [days, setDays] = useState<number>(1);
-  const [isDragging, setIsDragging] = useState(false);
 
   const handleChange = (e: ChangeEvent<any>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
