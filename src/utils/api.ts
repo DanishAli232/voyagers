@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://voyagers-server.onrender.com", // Replace with your desired base URL
+  baseURL: process.env.REACT_APP_SERVER_URL || "https://voyagers-server.onrender.com", // Replace with your desired base URL
 });
 
 api.interceptors.request.use((config) => {

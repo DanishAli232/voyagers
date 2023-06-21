@@ -140,7 +140,7 @@ const SingleItinerary = (props: any) => {
         </div>
       </section>
 
-      {purchasedItineraries.includes(itineraryId) ? (
+      {purchasedItineraries.includes(itineraryId) || isMy ? (
         data.eachDetail?.map((each) => (
           <section className="dt-deatils">
             <div className="container">

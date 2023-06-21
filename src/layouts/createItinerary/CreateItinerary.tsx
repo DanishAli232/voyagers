@@ -168,6 +168,9 @@ const CreateItinerary = (props: Props) => {
       formData.append("country", values.country);
       formData.append("title", values.title);
       formData.append("price", values.price);
+      formData.append("category", JSON.stringify(values.category));
+      formData.append("introduction", values.introduction);
+      formData.append("salesPitch", values.salesPitch);
       // formData.append("eachDetail", JSON.stringify(values.eachDetail));
       // Add other non-file fields to the formData
 
@@ -181,6 +184,24 @@ const CreateItinerary = (props: Props) => {
         if (each.stayImages) {
           each.stayImages.forEach((file, index) => {
             formData.append(`eachDetail[${each.day}].stayImages[${index}]`, file);
+          });
+        }
+
+        if (each.vibeImages) {
+          each.vibeImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].vibeImages[${index}]`, file);
+          });
+        }
+
+        if (each.tasteImages) {
+          each.tasteImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].tasteImages[${index}]`, file);
+          });
+        }
+
+        if (each.experienceImages) {
+          each.experienceImages.forEach((file, index) => {
+            formData.append(`eachDetail[${each.day}].experienceImages[${index}]`, file);
           });
         }
 
@@ -210,8 +231,10 @@ const CreateItinerary = (props: Props) => {
       console.log(response.data); // Handle the server response
 
       // Reset the form or perform any other necessary actions
-    } catch (error) {
-      console.error(error); // Handle the error
+    } catch (error: any) {
+      if (error.response?.data) {
+        setIsErrored(error.response?.data);
+      }
     }
   };
 
@@ -244,6 +267,21 @@ const CreateItinerary = (props: Props) => {
 
     // let droppedFile = e.dataTransfer.files[0];
     // setValues({ ...values, image: droppedFile });
+  };
+
+  const clearImage = (
+    title: "stayImages" | "experienceImages" | "tasteImages" | "vibeImages",
+    key: number,
+    day: number
+  ) => {
+    let newValues = values.eachDetail.map((each) => {
+      if (each.day === day) {
+        return { ...each, [title]: each[title]?.filter((each, idx) => idx !== key) };
+      } else return each;
+    });
+
+    setValues({ ...values, eachDetail: newValues });
+    // values.eachDetail[day-1].
   };
 
   return (
@@ -739,25 +777,39 @@ const CreateItinerary = (props: Props) => {
                 <div className="tabbable-line">
                   <ul className="nav nav-tabs text-center">
                     <li className={`${currentTab === 0 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(0)} className={`${currentTab > 0 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(0)}
+                        className={`${currentTab > 0 ? "complete" : ""}`}
+                      >
                         Stay
                       </button>
                     </li>
 
                     <li className={`${currentTab === 1 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(1)} className={`${currentTab > 1 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(1)}
+                        className={`${currentTab > 1 ? "complete" : ""}`}
+                      >
                         Taste
                       </button>
                     </li>
 
                     <li className={`${currentTab === 2 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(2)} className={`${currentTab > 2 ? "complete" : ""}`}>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentTab(2)}
+                        className={`${currentTab > 2 ? "complete" : ""}`}
+                      >
                         Vibe
                       </button>
                     </li>
 
                     <li className={`${currentTab === 3 ? "active" : ""}`}>
-                      <button onClick={() => setCurrentTab(3)}>Experience</button>
+                      <button type="button" onClick={() => setCurrentTab(3)}>
+                        Experience
+                      </button>
                     </li>
                   </ul>
 
@@ -829,9 +881,12 @@ const CreateItinerary = (props: Props) => {
 
                           <div className="images-upload">
                             <ul>
-                              {item.stayImages?.map((image) => (
+                              {item.stayImages?.map((image, idx) => (
                                 <li>
-                                  <i className="fa fa-window-close"></i>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("stayImages", idx, item.day)}
+                                  ></i>
                                   <img src={URL.createObjectURL(image)} alt="icon" />
                                 </li>
                               ))}
@@ -890,9 +945,12 @@ const CreateItinerary = (props: Props) => {
 
                           <div className="images-upload">
                             <ul>
-                              {item.tasteImages?.map((image) => (
+                              {item.tasteImages?.map((image, idx) => (
                                 <li>
-                                  <i className="fa fa-window-close"></i>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("tasteImages", idx, item.day)}
+                                  ></i>
                                   <img src={URL.createObjectURL(image)} alt="icon" />
                                 </li>
                               ))}
@@ -950,9 +1008,12 @@ const CreateItinerary = (props: Props) => {
 
                           <div className="images-upload">
                             <ul>
-                              {item.vibeImages?.map((image) => (
+                              {item.vibeImages?.map((image, idx) => (
                                 <li>
-                                  <i className="fa fa-window-close"></i>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("vibeImages", idx, item.day)}
+                                  ></i>
                                   <img src={URL.createObjectURL(image)} alt="icon" />
                                 </li>
                               ))}
@@ -1015,9 +1076,12 @@ const CreateItinerary = (props: Props) => {
 
                           <div className="images-upload">
                             <ul>
-                              {item.experienceImages?.map((image) => (
+                              {item.experienceImages?.map((image, idx) => (
                                 <li>
-                                  <i className="fa fa-window-close"></i>
+                                  <i
+                                    className="fa fa-window-close"
+                                    onClick={() => clearImage("experienceImages", idx, item.day)}
+                                  ></i>
                                   <img src={URL.createObjectURL(image)} alt="icon" />
                                 </li>
                               ))}
@@ -1044,7 +1108,9 @@ const CreateItinerary = (props: Props) => {
             </div>
           </div>
         ))}
+
         {isComplete && <p>Itinerary created successfuly</p>}
+
         <div className="row">
           <div className="col-md-12 text-center">
             <button type="submit" className="btn btn-orange navbar-btn">

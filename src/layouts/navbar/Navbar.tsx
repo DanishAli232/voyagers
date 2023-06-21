@@ -123,7 +123,7 @@ const Navbar = (props: Props) => {
     else setIsLoggedIn(false);
   };
 
-  const handleShowDropdown = (e: MouseEvent<HTMLAnchorElement>) => {
+  const handleShowDropdown = (e: MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -171,8 +171,12 @@ const Navbar = (props: Props) => {
                   <Link to="/">Home</Link>
                 </li>
 
-                <li className={`dropdown dropdown-large${isDropdownOpen ? " open" : ""}`}>
-                  <a href="#" onClick={handleShowDropdown} className="dropdown-toggle" data-toggle="dropdown">
+                <li
+                  onMouseLeave={handleShowDropdown}
+                  onMouseEnter={handleShowDropdown}
+                  className={`dropdown dropdown-large${isDropdownOpen ? " open" : ""}`}
+                >
+                  <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                     Destinations <b className="caret"></b>
                   </a>
 

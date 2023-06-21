@@ -2,7 +2,7 @@ import "./assets/styles/index.css";
 import { ChangeEvent, FormEvent, useState } from "react";
 import logo from "./assets/images/logo.png";
 import api from "../../utils/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 type State = {
   email: string;
@@ -112,7 +112,7 @@ const SignUp = () => {
                   <div className="sigup-boxlast ">
                     <h6 className="text-center">
                       Already have an account?
-                      <a href="#"> Login</a>
+                      <Link to="/auth/sign-in"> Login</Link>
                     </h6>
                   </div>
                 </div>
