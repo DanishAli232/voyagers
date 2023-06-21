@@ -10,6 +10,7 @@ import img2 from "./assets/images/img2.png";
 import img3 from "./assets/images/img3.png";
 import img4 from "./assets/images/img4.png";
 import img5 from "./assets/images/img5.png";
+import CircularProgress from "../../components/CircularProgress/CircularProgress";
 
 type Props = {};
 
@@ -57,6 +58,7 @@ type Error400 = {
 const CreateItinerary = (props: Props) => {
   const [isComplete, setIsComplete] = useState(false);
   const [isErrored, setIsErrored] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
   const [values, setValues] = useState<Values>({
     country: "",
@@ -159,6 +161,7 @@ const CreateItinerary = (props: Props) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -234,6 +237,8 @@ const CreateItinerary = (props: Props) => {
       if (error.response?.data) {
         setIsErrored(error.response?.data);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -584,6 +589,16 @@ const CreateItinerary = (props: Props) => {
                 </label>
               </div>
             </div>
+
+            <p
+              style={{
+                display: isErrored?.image ? "block" : "none",
+                color: isErrored?.image ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.image}
+            </p>
           </div>
 
           <div className="col-sm-12 col-md-6 col-lg-6">
@@ -754,6 +769,7 @@ const CreateItinerary = (props: Props) => {
         {values.eachDetail.map((item) => (
           <div className="row" style={{ marginTop: "100px" }}>
             <div className="col-md-12">
+              <h3 style={{ textAlign: "center" }}>Day {item.day}</h3>
               <input
                 type="text"
                 value={item.dayTitle}
@@ -779,7 +795,7 @@ const CreateItinerary = (props: Props) => {
                       <button
                         type="button"
                         onClick={() => setCurrentTab(0)}
-                        className={`${currentTab > 0 ? "complete" : ""}`}
+                        className={`${currentTab > 0 ? "" : ""}`}
                       >
                         Stay
                       </button>
@@ -789,7 +805,7 @@ const CreateItinerary = (props: Props) => {
                       <button
                         type="button"
                         onClick={() => setCurrentTab(1)}
-                        className={`${currentTab > 1 ? "complete" : ""}`}
+                        className={`${currentTab > 1 ? "" : ""}`}
                       >
                         Taste
                       </button>
@@ -799,7 +815,7 @@ const CreateItinerary = (props: Props) => {
                       <button
                         type="button"
                         onClick={() => setCurrentTab(2)}
-                        className={`${currentTab > 2 ? "complete" : ""}`}
+                        className={`${currentTab > 2 ? "" : ""}`}
                       >
                         Vibe
                       </button>
@@ -1112,8 +1128,8 @@ const CreateItinerary = (props: Props) => {
 
         <div className="row">
           <div className="col-md-12 text-center">
-            <button type="submit" className="btn btn-orange navbar-btn">
-              Submit Itinerary
+            <button disabled={isLoading} type="submit" className="btn btn-orange navbar-btn">
+              {isLoading ? <CircularProgress /> : "Submit Itinerary"}
             </button>
           </div>
         </div>

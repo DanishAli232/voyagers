@@ -984,3 +984,11 @@ h3.price-sec span {
   height: 100%;
   z-index: 100;
 }
+
+.main-loader {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}

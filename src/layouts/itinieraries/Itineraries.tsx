@@ -7,6 +7,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import CircularProgress from "../../components/CircularProgress/CircularProgress";
 
 type Props = {};
 
@@ -52,10 +53,19 @@ const Itineraries = (props: Props) => {
   const [data, setData] = useState<Itinerary[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setselectedTab] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getItineraries = async () => {
-    let getdata = (await api(`/itinerary?region=${searchParams.get("region")}`)) as { data: Itinerary[] };
-    setData(getdata.data);
+    try {
+      setIsLoading(true);
+
+      let getdata = (await api(`/itinerary?region=${searchParams.get("region")}`)) as { data: Itinerary[] };
+      setData(getdata.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -128,42 +138,45 @@ const Itineraries = (props: Props) => {
 
                       <div className="carousel-reviews broun-block">
                         <div className="container-fuild">
-                          <div className="row">
-                            <div id="carousel-reviews" className="carousel slide" data-ride="carousel">
-                              <div className="carousel-inner">
-                                <div className="item active">
-                                  <div className="card-slid">
-                                    <Carousel itemClass="w-full" responsive={responsive}>
-                                      {data
-                                        .filter((each) => (selectedTab ? each.category.includes(selectedTab) : true))
-                                        .map((each) => (
-                                          <div key={each._id} className="list-item">
-                                            <Link
-                                              style={{ textDecoration: "none" }}
-                                              to={`/itinerary/view/${each._id}`}
-                                              className="card"
-                                            >
-                                              <img
-                                                className="card-img-top"
-                                                src={each.image}
-                                                alt="Card image"
-                                                style={{ width: "100%" }}
-                                              />
-                                              <div className="badge">
-                                                <p>{each.category[0]}</p>
-                                              </div>
-                                              <div className="card-body">
-                                                <h4 className="card-title">{each.title}</h4>
-                                                <div className="subtitle">
-                                                  <span className="a">Created by:</span>
-                                                  <span className="b">{each.userId.username}</span>
+                          {isLoading ? (
+                            <CircularProgress />
+                          ) : (
+                            <div className="row">
+                              <div id="carousel-reviews" className="carousel slide" data-ride="carousel">
+                                <div className="carousel-inner">
+                                  <div className="item active">
+                                    <div className="card-slid">
+                                      <Carousel itemClass="w-full" responsive={responsive}>
+                                        {data
+                                          .filter((each) => (selectedTab ? each.category.includes(selectedTab) : true))
+                                          .map((each) => (
+                                            <div key={each._id} className="list-item">
+                                              <Link
+                                                style={{ textDecoration: "none" }}
+                                                to={`/itinerary/view/${each._id}`}
+                                                className="card"
+                                              >
+                                                <img
+                                                  className="card-img-top"
+                                                  src={each.image}
+                                                  alt="Card image"
+                                                  style={{ width: "100%" }}
+                                                />
+                                                <div className="badge">
+                                                  <p>{each.category[0]}</p>
                                                 </div>
-                                              </div>
-                                            </Link>
-                                          </div>
-                                        ))}
-                                    </Carousel>
-                                    {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                <div className="card-body">
+                                                  <h4 className="card-title">{each.title}</h4>
+                                                  <div className="subtitle">
+                                                    <span className="a">Created by:</span>
+                                                    <span className="b">{each.userId.username}</span>
+                                                  </div>
+                                                </div>
+                                              </Link>
+                                            </div>
+                                          ))}
+                                      </Carousel>
+                                      {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                       <div className="card">
                                         <img
                                           className="card-img-top"
@@ -223,11 +236,12 @@ const Itineraries = (props: Props) => {
                                         </div>
                                       </div>
                                     </div> */}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
                       <br />

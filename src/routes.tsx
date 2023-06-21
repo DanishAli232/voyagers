@@ -65,7 +65,7 @@ const router = createBrowserRouter([
 function trueIfSeller(Component: Element, Otherwise: Element) {
   // Check user role here and return the corresponding component
   const userRole = getUserRole(); // Replace this with your logic to get the user's role
-
+console.log(getUserRole)
   if (userRole === "seller") {
     return Component;
   } else {

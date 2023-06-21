@@ -4,6 +4,7 @@ import "./assets/styles/index.css";
 import logo from "./assets/images/logo.png";
 import api from "../../utils/api";
 import { Link, useNavigate } from "react-router-dom";
+import CircularProgress from "../../components/CircularProgress/CircularProgress";
 
 type State = {
   email: string;
@@ -12,21 +13,26 @@ type State = {
 
 const SignIn = () => {
   const [values, setValues] = useState<State>({ email: "", password: "" });
+  const [errors, setErrors] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       let data = await api.post("/users/login", values);
       let token = data.data?.token;
-      
+
       if (token) {
         localStorage.setItem("jwt", token);
         navigate("/");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      setErrors(error.response.data);
+      console.log(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,6 +64,17 @@ const SignIn = () => {
                   placeholder="Enter email"
                   name="email"
                 />
+
+                <p
+                  style={{
+                    textAlign: "center",
+                    display: errors?.email ? "block" : "none",
+                    color: errors?.email ? "red" : "black",
+                    marginTop: "5px",
+                  }}
+                >
+                  {errors.email}
+                </p>
                 <br />
                 <label className="control-label" htmlFor="password">
                   Password
@@ -71,12 +88,34 @@ const SignIn = () => {
                   placeholder="Enter password"
                   name="password"
                 />
+
+                <p
+                  style={{
+                    textAlign: "center",
+                    display: errors?.password ? "block" : "none",
+                    color: errors?.password ? "red" : "black",
+                    marginTop: "5px",
+                  }}
+                >
+                  {errors.password}
+                </p>
                 <i className="fa fa-eye-open"></i>
                 <br />
+
+                <p
+                  style={{
+                    textAlign: "center",
+                    display: errors?.message ? "block" : "none",
+                    color: errors?.message ? "red" : "black",
+                    marginTop: "5px",
+                  }}
+                >
+                  {errors.message}
+                </p>
                 <p>Forgot Password?</p>
                 <br />
-                <button type="submit" className="btn btn-orange navbar-btn btn-block">
-                  Login
+                <button type="submit" disabled={isLoading} className="btn btn-orange navbar-btn btn-block">
+                  {isLoading ? <CircularProgress /> : "Login"}
                 </button>
               </form>
               <div className="row">

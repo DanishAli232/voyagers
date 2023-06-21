@@ -270,7 +270,7 @@ const EditItinerary = (props: Props) => {
       formData.append("eachDetail", JSON.stringify(eachData));
 
       // Make the POST request using Axios
-      const response = await api.patch("/itinerary", formData);
+      const response = await api.patch(`/itinerary/${itineraryId}`, formData);
       console.log(response.data); // Handle the server response
 
       // Reset the form or perform any other necessary actions
@@ -632,6 +632,16 @@ const EditItinerary = (props: Props) => {
                 </label>
               </div>
             </div>
+
+            <p
+              style={{
+                display: isErrored?.image ? "block" : "none",
+                color: isErrored?.image ? "red" : "black",
+                marginTop: "5px",
+              }}
+            >
+              {isErrored.image}
+            </p>
           </div>
 
           <div className="col-sm-12 col-md-6 col-lg-6">

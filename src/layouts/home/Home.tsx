@@ -350,11 +350,11 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-              <div className="text-center">
+              {/* <div className="text-center">
                 <button className="btn org-faq">
                   Show more <i className="fa fa-angle-down"></i>
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="col-md-2"></div>
           </div>
