@@ -1,4 +1,4 @@
-import { LazyExoticComponent, ReactElement, lazy } from "react";
+import { LazyExoticComponent, ReactElement, lazy, useEffect, useState } from "react";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import Navbar from "./layouts/navbar/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -53,7 +53,10 @@ const router = createBrowserRouter([
       </>
     ),
     children: [
-      { path: "/itinerary/list", element: <ProtectedRoute Element={trueIfSeller(MyItineraries, Itineraries)} /> },
+      {
+        path: "/itinerary/list",
+        element: <ProtectedRoute Element={Itineraries} />,
+      },
       { path: "/itinerary/create", element: <ProtectedRoute Element={CreateItinerary} /> },
       { path: "/itinerary/me", element: <ProtectedRoute Element={MyItineraries} /> },
       { path: "/itinerary/view/:itineraryId", element: <ProtectedRoute Element={SingleItinerary} /> },
@@ -62,15 +65,21 @@ const router = createBrowserRouter([
   },
 ]);
 
-function trueIfSeller(Component: Element, Otherwise: Element) {
+function TrueIfSeller({ Component, Otherwise }: { Component: any; Otherwise: any }) {
   // Check user role here and return the corresponding component
-  const userRole = getUserRole(); // Replace this with your logic to get the user's role
-console.log(getUserRole)
-  if (userRole === "seller") {
-    return Component;
-  } else {
-    return Otherwise;
-  }
+  const [isTrue, setIsTrue] = useState(false);
+
+  useEffect(() => {
+    const userRole = getUserRole(); // Replace this with your logic to get the user's role
+
+    if (userRole === "seller") {
+      setIsTrue(true);
+    } else {
+      setIsTrue(false);
+    }
+  });
+
+  return isTrue ? <Component /> : <Otherwise />;
 }
 
 export default router;

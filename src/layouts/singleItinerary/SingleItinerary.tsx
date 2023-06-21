@@ -132,11 +132,15 @@ const SingleItinerary = (props: any) => {
                         ) : (
                           ""
                         )}
-                        <div className="col-md-3 col-sm-3 col-xs-4">
-                          <button onClick={handleCheckout} className="btn btn-orange navbar-btn">
-                            Checkout
-                          </button>
-                        </div>
+                        {purchasedItineraries.includes(itineraryId) || isMy ? (
+                          ""
+                        ) : (
+                          <div className="col-md-3 col-sm-3 col-xs-4">
+                            <button onClick={handleCheckout} className="btn btn-orange navbar-btn">
+                              Checkout
+                            </button>
+                          </div>
+                        )}
                         <div className="col-md-4 col-sm-3 col-xs-4">
                           <h3 className="price-sec text-left">
                             Price: <span> ${data.price}</span>

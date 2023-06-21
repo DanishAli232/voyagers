@@ -3,11 +3,13 @@ import api from "../../utils/api";
 import "./style.css";
 import "./slider.css";
 import "./carousel.css";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CircularProgress from "../../components/CircularProgress/CircularProgress";
+import { getUserRole } from "../../utils/utils";
+import regions from "../../utils/regions";
 
 type Props = {};
 
@@ -54,12 +56,15 @@ const Itineraries = (props: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setselectedTab] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const getItineraries = async () => {
     try {
       setIsLoading(true);
 
-      let getdata = (await api(`/itinerary?region=${searchParams.get("region")}`)) as { data: Itinerary[] };
+      let getdata = (await api(
+        `/itinerary${searchParams.get("region") ? "?region=" + searchParams.get("region") : ""}`
+      )) as { data: Itinerary[] };
       setData(getdata.data);
     } catch (error) {
       console.log(error);
@@ -69,6 +74,18 @@ const Itineraries = (props: Props) => {
   };
 
   useEffect(() => {
+    const userRole = getUserRole(); // Replace this with your logic to get the user's role
+
+    if (userRole === "seller") {
+      navigate("/itinerary/me");
+    }
+
+    console.log(
+      Object.values(regions)
+        .flat()
+        .find((region) => region.code === searchParams.get("region"))
+    );
+
     getItineraries();
   }, [searchParams]);
 
@@ -82,7 +99,13 @@ const Itineraries = (props: Props) => {
             <div className="col-sm-12 col-md-8 col-lg-8">
               <div className="left-first">
                 <p className="para-first">Discover Travel Itineraries</p>
-                <h1 className="top-heading">{searchParams.get("region")}</h1>
+                <h1 className="top-heading">
+                  {
+                    Object.values(regions)
+                      .flat()
+                      .find((region) => region.code === searchParams.get("region"))?.country
+                  }
+                </h1>
               </div>
             </div>
             <div className="col-sm-12 col-md-2 col-lg-2"></div>

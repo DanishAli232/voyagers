@@ -8,6 +8,7 @@ import "react-multi-carousel/lib/styles.css";
 
 import { Link, useNavigate } from "react-router-dom";
 import CircularProgress from "../../components/CircularProgress/CircularProgress";
+import { getUserRole } from "../../utils/utils";
 
 type Props = {};
 
@@ -77,6 +78,13 @@ const MyItineraries = (props: Props) => {
   };
 
   useEffect(() => {
+    // Check user role here and return the corresponding component
+    const userRole = getUserRole(); // Replace this with your logic to get the user's role
+
+    if (userRole !== "seller") {
+      navigate("/itinerary/list");
+    }
+
     getUserDetails();
     getItineraries();
   }, []);
