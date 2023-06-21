@@ -160,9 +160,9 @@ const Navbar = (props: Props) => {
                 <span className="icon-bar"></span>
                 <span className="icon-bar"></span>
               </button>
-              <a href="#" className="navbar-brand">
+              <Link to="/" className="navbar-brand">
                 <img src={logo} />
-              </a>
+              </Link>
             </div>
 
             <div className="collapse navbar-collapse" id="myNavbar">

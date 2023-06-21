@@ -12,6 +12,7 @@ import Carousel from "react-multi-carousel";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../utils/api";
+import { checkIfUserIsAuthenticated } from "../../utils/utils";
 
 type Props = {};
 
@@ -55,13 +56,28 @@ type Itinerary = {
 
 const Home = () => {
   const [data, setData] = useState<Itinerary[]>([]);
+  const [currentTab, setCurrentTab] = useState<number | null>(null);
+  const [user, setUser] = useState(false);
 
   const getItineraries = async () => {
-    let getdata = (await api(`/itinerary?limit=10`)) as { data: Itinerary[] };
-    setData(getdata.data);
+    try {
+      let getdata = (await api(`/itinerary?limit=10`)) as { data: Itinerary[] };
+      setData(getdata.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const verifyLogin = async () => {
+    let isAuthenticated = await checkIfUserIsAuthenticated();
+
+    if (isAuthenticated) setUser(true);
+    else setUser(false);
   };
 
   useEffect(() => {
+    verifyLogin();
+
     getItineraries();
   }, []);
 
@@ -258,10 +274,11 @@ const Home = () => {
             <div className="col-md-8">
               <div className="panel-group" id="accordion">
                 <div
-                  className="panel panel-default collapsed"
+                  className={`panel panel-default ${currentTab === 0 ? "" : "collapsed"}`}
                   data-target="#collapseOne"
                   data-toggle="collapse"
                   data-parent="#accordion"
+                  onClick={() => (currentTab === 0 ? setCurrentTab(null) : setCurrentTab(0))}
                   aria-expanded="false"
                 >
                   <div className="panel-heading">
@@ -271,9 +288,9 @@ const Home = () => {
                   </div>
                   <div
                     id="collapseOne"
-                    className="panel-collapse collapse"
+                    className={`panel-collapse collapse ${currentTab === 0 ? "in" : ""}`}
                     aria-expanded="false"
-                    style={{ height: "0px" }}
+                    style={{ height: currentTab === 0 ? "auto" : "0px", transition: "2s all" }}
                   >
                     <div className="panel-body">
                       <p className="text-bg">
@@ -286,8 +303,9 @@ const Home = () => {
               </div>
               <div className="panel-group" id="accordion">
                 <div
-                  className="panel panel-default collapsed"
+                  className={`panel panel-default ${currentTab === 1 ? "" : "collapsed"}`}
                   data-target="#collapsetwo"
+                  onClick={() => (currentTab === 1 ? setCurrentTab(null) : setCurrentTab(1))}
                   data-toggle="collapse"
                   data-parent="#accordion"
                   aria-expanded="false"
@@ -299,9 +317,9 @@ const Home = () => {
                   </div>
                   <div
                     id="collapsetwo"
-                    className="panel-collapse collapse"
+                    className={`panel-collapse collapse ${currentTab === 1 ? "in" : ""}`}
                     aria-expanded="false"
-                    style={{ height: "0px" }}
+                    style={{ height: currentTab === 1 ? "auto" : "0px", transition: "2s all" }}
                   >
                     <div className="panel-body">
                       <p className="text-bg">
@@ -312,9 +330,11 @@ const Home = () => {
                   </div>
                 </div>
               </div>
+
               <div className="panel-group" id="accordion">
                 <div
-                  className="panel panel-default collapsed"
+                  className={`panel panel-default ${currentTab === 2 ? "" : "collapsed"}`}
+                  onClick={() => (currentTab === 2 ? setCurrentTab(null) : setCurrentTab(2))}
                   data-target="#collapsethr"
                   data-toggle="collapse"
                   data-parent="#accordion"
@@ -327,9 +347,9 @@ const Home = () => {
                   </div>
                   <div
                     id="collapsethr"
-                    className="panel-collapse collapse"
+                    className={`panel-collapse collapse ${currentTab === 2 ? "in" : ""}`}
                     aria-expanded="false"
-                    style={{ height: "0px" }}
+                    style={{ height: currentTab === 2 ? "auto" : "0px", transition: "2s all" }}
                   >
                     <div className="panel-body">
                       <p className="text-bg">

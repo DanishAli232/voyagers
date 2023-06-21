@@ -48,7 +48,9 @@ const SignIn = () => {
           <div className="col-md-8">
             <div className="sigup-box">
               <div className="text-center">
-                <img src={logo} alt="Logo" />
+                <Link to="/">
+                  <img src={logo} alt="Logo" />
+                </Link>
                 <h1>Create your My Voyages Account</h1>
               </div>
               <form onSubmit={handleSubmit}>

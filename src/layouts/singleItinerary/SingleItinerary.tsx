@@ -89,8 +89,12 @@ const SingleItinerary = (props: any) => {
   };
 
   const getProfile = async () => {
-    let user = await api("/users/get-profile");
-    setPurchasedItineraries(user.data.user.boughtItineraries);
+    try {
+      let user = await api("/users/get-profile");
+      setPurchasedItineraries(user.data.user.boughtItineraries);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

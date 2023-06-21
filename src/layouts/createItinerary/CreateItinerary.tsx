@@ -11,6 +11,7 @@ import img3 from "./assets/images/img3.png";
 import img4 from "./assets/images/img4.png";
 import img5 from "./assets/images/img5.png";
 import CircularProgress from "../../components/CircularProgress/CircularProgress";
+import ReactModal from "react-modal";
 
 type Props = {};
 
@@ -59,6 +60,8 @@ const CreateItinerary = (props: Props) => {
   const [isComplete, setIsComplete] = useState(false);
   const [isErrored, setIsErrored] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [dayForDelete, setDayForDelete] = useState<number | null>(null);
+
   const [currentTab, setCurrentTab] = useState(0);
   const [values, setValues] = useState<Values>({
     country: "",
@@ -286,6 +289,13 @@ const CreateItinerary = (props: Props) => {
 
     setValues({ ...values, eachDetail: newValues });
     // values.eachDetail[day-1].
+  };
+
+  const deleteDay = () => {
+    const newValues = values.eachDetail.filter((each) => each.day !== dayForDelete);
+    setValues({ ...values, eachDetail: newValues });
+    setDayForDelete(null);
+    setDays(days - 1);
   };
 
   return (
@@ -766,10 +776,61 @@ const CreateItinerary = (props: Props) => {
           <h2 className="top-heading text-center">Please fill out the itinerary FORM below</h2>
         </div>
 
-        {values.eachDetail.map((item) => (
+        <ReactModal
+          style={{
+            content: {
+              width: "50vw",
+              height: "200px",
+              inset: "unset",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.75)",
+            },
+            overlay: {
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.75)",
+            },
+          }}
+          isOpen={typeof dayForDelete === "number"}
+        >
+          <div>
+            <h4>Are you sure you want to delete this day?</h4>
+            <div className="button-group">
+              <button style={{ marginRight: "20px" }} onClick={() => deleteDay()} className="btn btn-danger navbar-btn">
+                Delete
+              </button>
+              <button className="btn btn-success navbar-btn" onClick={() => setDayForDelete(null)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </ReactModal>
+
+        {values.eachDetail.map((item, idx) => (
           <div className="row" style={{ marginTop: "100px" }}>
             <div className="col-md-12">
-              <h3 style={{ textAlign: "center" }}>Day {item.day}</h3>
+              <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                <button
+                  type="button"
+                  onClick={() => setDayForDelete(item.day)}
+                  className="glyphicon glyphicon-trash"
+                  style={{
+                    background: "#f1a501",
+                    width: "34px",
+                    height: "34px",
+                    borderRadius: "50%",
+                    border: "none",
+                    outline: "none",
+                    color: "white",
+                    marginBottom: "50px",
+                  }}
+                ></button>
+              </div>
+
+              <h3 style={{ textAlign: "center" }}>Day {idx + 1}</h3>
               <input
                 type="text"
                 value={item.dayTitle}
@@ -778,13 +839,13 @@ const CreateItinerary = (props: Props) => {
                 id="dayTitle"
                 style={{ width: "50%", margin: "auto", marginBottom: "10px" }}
                 placeholder={`Enter ${
-                  item.day === 1
-                    ? `${item.day}st`
-                    : item.day === 2
-                    ? `${item.day}nd`
-                    : item.day === 3
-                    ? `${item.day}rd`
-                    : `${item.day}th`
+                  idx + 1 === 1
+                    ? `${idx + 1}st`
+                    : idx + 1 === 2
+                    ? `${idx + 1}nd`
+                    : idx + 1 === 3
+                    ? `${idx + 1}rd`
+                    : `${idx + 1}th`
                 } day's Title`}
                 name="dayTitle"
               />
@@ -792,31 +853,19 @@ const CreateItinerary = (props: Props) => {
                 <div className="tabbable-line">
                   <ul className="nav nav-tabs text-center">
                     <li className={`${currentTab === 0 ? "active" : ""}`}>
-                      <button
-                        type="button"
-                        onClick={() => setCurrentTab(0)}
-                        className={`${currentTab > 0 ? "" : ""}`}
-                      >
+                      <button type="button" onClick={() => setCurrentTab(0)} className={`${currentTab > 0 ? "" : ""}`}>
                         Stay
                       </button>
                     </li>
 
                     <li className={`${currentTab === 1 ? "active" : ""}`}>
-                      <button
-                        type="button"
-                        onClick={() => setCurrentTab(1)}
-                        className={`${currentTab > 1 ? "" : ""}`}
-                      >
+                      <button type="button" onClick={() => setCurrentTab(1)} className={`${currentTab > 1 ? "" : ""}`}>
                         Taste
                       </button>
                     </li>
 
                     <li className={`${currentTab === 2 ? "active" : ""}`}>
-                      <button
-                        type="button"
-                        onClick={() => setCurrentTab(2)}
-                        className={`${currentTab > 2 ? "" : ""}`}
-                      >
+                      <button type="button" onClick={() => setCurrentTab(2)} className={`${currentTab > 2 ? "" : ""}`}>
                         Vibe
                       </button>
                     </li>
