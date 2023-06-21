@@ -226,16 +226,6 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-                <a className="left carousel-control" href="#carousel-reviews" role="button" data-slide="prev">
-                  <i id="right" className="fa fa-angle-left">
-                    {" "}
-                  </i>
-                </a>
-                <a className="right carousel-control" href="#carousel-reviews" role="button" data-slide="next">
-                  <i id="right" className="fa fa-angle-right">
-                    {" "}
-                  </i>
-                </a>
               </div>
             </div>
           </div>

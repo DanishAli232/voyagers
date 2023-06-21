@@ -834,7 +834,12 @@ const EditItinerary = (props: Props) => {
         </div>
 
         {values.eachDetail.map((item) => (
-          <div className="row" style={{ marginTop: "100px" }}>
+          <div
+            className="row"
+            style={{
+              marginTop: "100px",
+            }}
+          >
             <div className="col-md-12">
               <input
                 type="text"
