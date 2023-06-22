@@ -286,7 +286,11 @@ const Itineraries = (props: Props) => {
                             <div className="card-grid">
                               {data.map((each) => (
                                 <div key={each._id} className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                  <div className="card">
+                                  <Link
+                                    style={{ textDecoration: "none" }}
+                                    to={`/itinerary/view/${each._id}`}
+                                    className="card"
+                                  >
                                     <img
                                       className="card-img-top"
                                       src={each.image}
@@ -303,7 +307,7 @@ const Itineraries = (props: Props) => {
                                         <span className="b">{each.userId.username}</span>
                                       </div>
                                     </div>
-                                  </div>
+                                  </Link>
                                 </div>
                               ))}
                               {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
