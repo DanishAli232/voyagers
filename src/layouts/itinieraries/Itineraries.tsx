@@ -53,6 +53,7 @@ const responsive = {
 
 const Itineraries = (props: Props) => {
   const [data, setData] = useState<Itinerary[]>([]);
+  const [purchasedItineraries, setPurchasedItineraries] = useState<Itinerary[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTab, setselectedTab] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -66,6 +67,11 @@ const Itineraries = (props: Props) => {
         `/itinerary${searchParams.get("region") ? "?region=" + searchParams.get("region") : ""}`
       )) as { data: Itinerary[] };
       setData(getdata.data);
+
+      let purchasedData = (await api(
+        `/itinerary/purchased/${searchParams.get("region") ? "?region=" + searchParams.get("region") : ""}`
+      )) as { data: Itinerary[] };
+      setPurchasedItineraries(purchasedData.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -79,12 +85,6 @@ const Itineraries = (props: Props) => {
     if (userRole === "seller") {
       navigate("/itinerary/me");
     }
-
-    console.log(
-      Object.values(regions)
-        .flat()
-        .find((region) => region.code === searchParams.get("region"))
-    );
 
     getItineraries();
   }, [searchParams]);
@@ -170,7 +170,7 @@ const Itineraries = (props: Props) => {
                                   <div className="item active">
                                     <div className="card-slid">
                                       <Carousel itemClass="w-full" responsive={responsive}>
-                                        {data
+                                        {purchasedItineraries
                                           .filter((each) => (selectedTab ? each.category.includes(selectedTab) : true))
                                           .map((each) => (
                                             <div key={each._id} className="list-item">

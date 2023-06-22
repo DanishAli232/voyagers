@@ -60,7 +60,7 @@ const MyItineraries = (props: Props) => {
     setIsLoading(true);
 
     try {
-      let getdata = (await api("/itinerary")) as { data: Itinerary[] };
+      let getdata = (await api("/itinerary/list/me")) as { data: Itinerary[] };
 
       setData(getdata.data);
     } catch (err) {
