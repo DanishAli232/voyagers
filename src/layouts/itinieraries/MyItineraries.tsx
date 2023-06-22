@@ -109,45 +109,46 @@ const MyItineraries = (props: Props) => {
           </div>
         </div>
       </section>
-      <section className="listing">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-7">
-              <div className="left-first">
-                <p className="para-first">My Listing</p>
-                <h1 className="top-heading">
-                  <span className="first-textbg">ITINERARIES Listing</span>
-                </h1>
+      {data.length > 0 ? (
+        <section className="listing">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-7">
+                <div className="left-first">
+                  <p className="para-first">My Listing</p>
+                  <h1 className="top-heading">
+                    <span className="first-textbg">ITINERARIES Listing</span>
+                  </h1>
+                </div>
               </div>
             </div>
-          </div>
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            <div className="row">
-              <div className="card-grid">
-                {data.map((each) => (
-                  <Link
-                    to={`/itinerary/view/${each._id}`}
-                    key={each._id}
-                    className="col-lg-3 col-md-3 col-sm-6 col-xs-12"
-                  >
-                    <div className="card">
-                      <img className="card-img-top" src={each.image} alt="Card image" style={{ width: "100%" }} />
-                      <div className="badge">
-                        <p>{each.category[0]}</p>
-                      </div>
-                      <div className="card-body">
-                        <h4 className="card-title">{each.title}</h4>
-                        <div className="subtitle">
-                          <span className="a">Created by:</span>
-                          <span className="b">{each.userId.username}</span>
+            {isLoading ? (
+              <CircularProgress />
+            ) : (
+              <div className="row">
+                <div className="card-grid">
+                  {data.map((each) => (
+                    <Link
+                      to={`/itinerary/view/${each._id}`}
+                      key={each._id}
+                      className="col-lg-3 col-md-3 col-sm-6 col-xs-12"
+                    >
+                      <div className="card">
+                        <img className="card-img-top" src={each.image} alt="Card image" style={{ width: "100%" }} />
+                        <div className="badge">
+                          <p>{each.category[0]}</p>
+                        </div>
+                        <div className="card-body">
+                          <h4 className="card-title">{each.title}</h4>
+                          <div className="subtitle">
+                            <span className="a">Created by:</span>
+                            <span className="b">{each.userId.username}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
-                {/* {data.map((each) => (
+                    </Link>
+                  ))}
+                  {/* {data.map((each) => (
                   <div key={each._id} className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div className="card">
                       <img className="card-img-top" src={each.image} alt="Card image" style={{ width: "100%" }} />
@@ -164,7 +165,7 @@ const MyItineraries = (props: Props) => {
                     </div>
                   </div>
                 ))} */}
-                {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                  {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div className="card">
                   <img className="card-img-top" src="img/Rect2.png" alt="Card image" style={{ width: "100%" }} />
                   <div className="badge">
@@ -209,10 +210,10 @@ const MyItineraries = (props: Props) => {
                   </div>
                 </div>
               </div> */}
+                </div>
               </div>
-            </div>
-          )}
-          {/* <div className="row">
+            )}
+            {/* <div className="row">
             <div className="card-grid">
               <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div className="card">
@@ -276,15 +277,22 @@ const MyItineraries = (props: Props) => {
               </div>
             </div>
           </div> */}
-          <div className="row">
-            <div className="col-md-12 ">
-              <div className="more-listing text-center">
-                {/* <button className="btn btn-orange navbar-btn">Create Itinerary</button> */}
+            <div className="row">
+              <div className="col-md-12 ">
+                <div className="more-listing text-center">
+                  {/* <button className="btn btn-orange navbar-btn">Create Itinerary</button> */}
+                </div>
               </div>
             </div>
           </div>
+        </section>
+      ) : isLoading ? (
+        <CircularProgress />
+      ) : (
+        <div>
+          <h3 style={{ textAlign: "center" }}>No Itineraries created yet</h3>
         </div>
-      </section>{" "}
+      )}
     </>
   );
 };

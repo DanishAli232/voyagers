@@ -110,96 +110,99 @@ const Itineraries = (props: Props) => {
             </div>
             <div className="col-sm-12 col-md-2 col-lg-2"></div>
           </div>
-          <div className="row">
-            <div className="col-md-12">
-              <div className="tabbable-panel listingtabs">
-                <div className="tabbable-line">
-                  <ul className="nav nav-tabs text-center">
-                    <li className={`${selectedTab === "" ? "active" : ""}`}>
-                      <a href="#tab_default_1" onClick={() => setselectedTab("")} data-toggle="tab">
-                        {" "}
-                        All Itineraries
-                      </a>
-                    </li>
-                    <li className={`${selectedTab === "stay" ? "active" : ""}`}>
-                      <a href="#tab_default_2" data-toggle="tab" onClick={() => setselectedTab("stay")}>
-                        {" "}
-                        Stay
-                      </a>
-                    </li>
-                    <li className={`${selectedTab === "taste" ? "active" : ""}`}>
-                      <a href="#tab_default_3" data-toggle="tab" onClick={() => setselectedTab("taste")}>
-                        {" "}
-                        Taste
-                      </a>
-                    </li>
-                    <li className={`${selectedTab === "vibe" ? "active" : ""}`}>
-                      <a href="#tab_default_4" data-toggle="tab" onClick={() => setselectedTab("vibe")}>
-                        {" "}
-                        Vibe
-                      </a>
-                    </li>
-                    <li className={`${selectedTab === "experience" ? "active" : ""}`}>
-                      <a href="#tab_default_5" data-toggle="tab" onClick={() => setselectedTab("experience")}>
-                        {" "}
-                        Experience
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="tab-content listingtabs">
-                    <div className="tab-pane active" id="tab_default_1">
-                      <div className="row">
-                        <div className="col-md-7">
-                          <div className="left-first">
-                            <p className="para-first">Most Loved</p>
-                            <h1 className="top-heading">
-                              <span className="first-textbg">RECOMMENDED ITINERARIES</span>
-                            </h1>
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <div className="row">
+              <div className="col-md-12">
+                <div className="tabbable-panel listingtabs">
+                  <div className="tabbable-line">
+                    <ul className="nav nav-tabs text-center">
+                      <li className={`${selectedTab === "" ? "active" : ""}`}>
+                        <a href="#tab_default_1" onClick={() => setselectedTab("")} data-toggle="tab">
+                          {" "}
+                          All Itineraries
+                        </a>
+                      </li>
+                      <li className={`${selectedTab === "stay" ? "active" : ""}`}>
+                        <a href="#tab_default_2" data-toggle="tab" onClick={() => setselectedTab("stay")}>
+                          {" "}
+                          Stay
+                        </a>
+                      </li>
+                      <li className={`${selectedTab === "taste" ? "active" : ""}`}>
+                        <a href="#tab_default_3" data-toggle="tab" onClick={() => setselectedTab("taste")}>
+                          {" "}
+                          Taste
+                        </a>
+                      </li>
+                      <li className={`${selectedTab === "vibe" ? "active" : ""}`}>
+                        <a href="#tab_default_4" data-toggle="tab" onClick={() => setselectedTab("vibe")}>
+                          {" "}
+                          Vibe
+                        </a>
+                      </li>
+                      <li className={`${selectedTab === "experience" ? "active" : ""}`}>
+                        <a href="#tab_default_5" data-toggle="tab" onClick={() => setselectedTab("experience")}>
+                          {" "}
+                          Experience
+                        </a>
+                      </li>
+                    </ul>
+                    <div className="tab-content listingtabs">
+                      <div className="tab-pane active" id="tab_default_1">
+                        <div className="row">
+                          <div className="col-md-7">
+                            <div className="left-first">
+                              <p className="para-first">Most Loved</p>
+                              <h1 className="top-heading">
+                                <span className="first-textbg">RECOMMENDED ITINERARIES</span>
+                              </h1>
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="carousel-reviews broun-block">
-                        <div className="container-fuild">
-                          {isLoading ? (
-                            <CircularProgress />
-                          ) : (
-                            <div className="row">
-                              <div id="carousel-reviews" className="carousel slide" data-ride="carousel">
-                                <div className="carousel-inner">
-                                  <div className="item active">
-                                    <div className="card-slid">
-                                      <Carousel itemClass="w-full" responsive={responsive}>
-                                        {purchasedItineraries
-                                          .filter((each) => (selectedTab ? each.category.includes(selectedTab) : true))
-                                          .map((each) => (
-                                            <div key={each._id} className="list-item">
-                                              <Link
-                                                style={{ textDecoration: "none" }}
-                                                to={`/itinerary/view/${each._id}`}
-                                                className="card"
-                                              >
-                                                <img
-                                                  className="card-img-top"
-                                                  src={each.image}
-                                                  alt="Card image"
-                                                  style={{ width: "100%" }}
-                                                />
-                                                <div className="badge">
-                                                  <p>{each.category[0]}</p>
-                                                </div>
-                                                <div className="card-body">
-                                                  <h4 className="card-title">{each.title}</h4>
-                                                  <div className="subtitle">
-                                                    <span className="a">Created by:</span>
-                                                    <span className="b">{each.userId.username}</span>
+                        <div className="carousel-reviews broun-block">
+                          <div className="container-fuild">
+                            {purchasedItineraries?.length > 0 ? (
+                              <div className="row">
+                                <div id="carousel-reviews" className="carousel slide" data-ride="carousel">
+                                  <div className="carousel-inner">
+                                    <div className="item active">
+                                      <div className="card-slid">
+                                        <Carousel itemClass="w-full" responsive={responsive}>
+                                          {purchasedItineraries
+                                            .filter((each) =>
+                                              selectedTab ? each.category.includes(selectedTab) : true
+                                            )
+                                            .map((each) => (
+                                              <div key={each._id} className="list-item">
+                                                <Link
+                                                  style={{ textDecoration: "none" }}
+                                                  to={`/itinerary/view/${each._id}`}
+                                                  className="card"
+                                                >
+                                                  <img
+                                                    className="card-img-top"
+                                                    src={each.image}
+                                                    alt="Card image"
+                                                    style={{ width: "100%" }}
+                                                  />
+                                                  <div className="badge">
+                                                    <p>{each.category[0]}</p>
                                                   </div>
-                                                </div>
-                                              </Link>
-                                            </div>
-                                          ))}
-                                      </Carousel>
-                                      {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                  <div className="card-body">
+                                                    <h4 className="card-title">{each.title}</h4>
+                                                    <div className="subtitle">
+                                                      <span className="a">Created by:</span>
+                                                      <span className="b">{each.userId.username}</span>
+                                                    </div>
+                                                  </div>
+                                                </Link>
+                                              </div>
+                                            ))}
+                                        </Carousel>
+                                        {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                       <div className="card">
                                         <img
                                           className="card-img-top"
@@ -259,58 +262,63 @@ const Itineraries = (props: Props) => {
                                         </div>
                                       </div>
                                     </div> */}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
+                            ) : (
+                              <div>
+                                <h3 style={{ textAlign: "center" }}>No Itineraries purchased yet</h3>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <br />
+                        <br />
 
-                      <section className="listing">
-                        <div className="container">
-                          <div className="row">
-                            <div className="col-md-7">
-                              <div className="left-first">
-                                <p className="para-first">My Listing</p>
-                                <h1 className="top-heading">
-                                  <span className="first-textbg">ITINERARIES Listing</span>
-                                </h1>
+                        <section className="listing">
+                          <div className="container">
+                            <div className="row">
+                              <div className="col-md-7">
+                                <div className="left-first">
+                                  <p className="para-first">My Listing</p>
+                                  <h1 className="top-heading">
+                                    <span className="first-textbg">ITINERARIES Listing</span>
+                                  </h1>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div className="row">
-                            <div className="card-grid">
-                              {data.map((each) => (
-                                <div key={each._id} className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                  <Link
-                                    style={{ textDecoration: "none" }}
-                                    to={`/itinerary/view/${each._id}`}
-                                    className="card"
-                                  >
-                                    <img
-                                      className="card-img-top"
-                                      src={each.image}
-                                      alt="Card image"
-                                      style={{ width: "100%" }}
-                                    />
-                                    <div className="badge">
-                                      <p>{each.category[0]}</p>
+                            {data?.length > 0 ? (
+                              <div className="row">
+                                <div className="card-grid">
+                                  {data.map((each) => (
+                                    <div key={each._id} className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                      <Link
+                                        style={{ textDecoration: "none" }}
+                                        to={`/itinerary/view/${each._id}`}
+                                        className="card"
+                                      >
+                                        <img
+                                          className="card-img-top"
+                                          src={each.image}
+                                          alt="Card image"
+                                          style={{ width: "100%" }}
+                                        />
+                                        <div className="badge">
+                                          <p>{each.category[0]}</p>
+                                        </div>
+                                        <div className="card-body">
+                                          <h4 className="card-title">{each.title}</h4>
+                                          <div className="subtitle">
+                                            <span className="a">Created by:</span>
+                                            <span className="b">{each.userId.username}</span>
+                                          </div>
+                                        </div>
+                                      </Link>
                                     </div>
-                                    <div className="card-body">
-                                      <h4 className="card-title">{each.title}</h4>
-                                      <div className="subtitle">
-                                        <span className="a">Created by:</span>
-                                        <span className="b">{each.userId.username}</span>
-                                      </div>
-                                    </div>
-                                  </Link>
-                                </div>
-                              ))}
-                              {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                  ))}
+                                  {/* <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                 <div className="card">
                                   <img
                                     className="card-img-top"
@@ -371,9 +379,14 @@ const Itineraries = (props: Props) => {
                                   </div>
                                 </div>
                               </div> */}
-                            </div>
-                          </div>
-                          {/* <div className="row">
+                                </div>
+                              </div>
+                            ) : (
+                              <div>
+                                <h3 style={{ textAlign: "center" }}>No Itineraries found</h3>
+                              </div>
+                            )}
+                            {/* <div className="row">
                             <div className="card-grid">
                               <div className="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                 <div className="card">
@@ -457,25 +470,26 @@ const Itineraries = (props: Props) => {
                               </div>
                             </div>
                           </div> */}
-                          <div className="row">
-                            <div className="col-md-12">
-                              <div className="more-listing text-center">
-                                <button className="btn btn-orange navbar-btn">Discover more</button>
+                            <div className="row">
+                              <div className="col-md-12">
+                                <div className="more-listing text-center">
+                                  <button className="btn btn-orange navbar-btn">Discover more</button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </section>
+                        </section>
+                      </div>
+                      <div className="tab-pane" id="tab_default_2"></div>
+                      <div className="tab-pane" id="tab_default_3"></div>
+                      <div className="tab-pane" id="tab_default_4"></div>
+                      <div className="tab-pane" id="tab_default_5"></div>
                     </div>
-                    <div className="tab-pane" id="tab_default_2"></div>
-                    <div className="tab-pane" id="tab_default_3"></div>
-                    <div className="tab-pane" id="tab_default_4"></div>
-                    <div className="tab-pane" id="tab_default_5"></div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </>
