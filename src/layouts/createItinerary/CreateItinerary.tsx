@@ -12,6 +12,7 @@ import img4 from "./assets/images/img4.png";
 import img5 from "./assets/images/img5.png";
 import CircularProgress from "../../components/CircularProgress/CircularProgress";
 import ReactModal from "react-modal";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
@@ -61,6 +62,7 @@ const CreateItinerary = (props: Props) => {
   const [isErrored, setIsErrored] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
   const [dayForDelete, setDayForDelete] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = useState(0);
   const [values, setValues] = useState<Values>({
@@ -234,6 +236,7 @@ const CreateItinerary = (props: Props) => {
       // Make the POST request using Axios
       const response = await api.post("/itinerary", formData);
       console.log(response.data); // Handle the server response
+      navigate("/itinerary/me");
 
       // Reset the form or perform any other necessary actions
     } catch (error: any) {
