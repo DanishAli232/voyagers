@@ -22,19 +22,23 @@ const Footer = (props: Props) => {
             <p className="footer-p">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
             <div className="social">
               {/* <!-- Facebook --> */}
-              <a href="https://web.facebook.com/profile.php?id=100032894001313&_rdc=1&_rdr" className="fb-ic">
+              <a
+                href="https://web.facebook.com/profile.php?id=100032894001313&_rdc=1&_rdr"
+                target="_blank"
+                className="fb-ic"
+              >
                 <img src={fb} />
               </a>
               {/* <!--instagram --> */}
-              <a href="https://www.instagram.com/myvoyagesofficial/" className="yt-ic">
+              <a href="https://www.instagram.com/myvoyagesofficial/" target="_blank" className="yt-ic">
                 <img src={insta} />
               </a>
               {/* <!-- linkedln --> */}
-              <a href="https://www.linkedin.com/company/myvoyages/" className="inst-ic">
+              <a href="https://www.linkedin.com/company/myvoyages/" target="_blank" className="inst-ic">
                 <img src={linkedIn} />
               </a>
               {/* <!-- tiktok +--> */}
-              <a href="https://www.tiktok.com/@myvoyagesofficial?lang=en" className="li-ic">
+              <a href="https://www.tiktok.com/@myvoyagesofficial?lang=en" target="_blank" className="li-ic">
                 <img src={tiktok} />
               </a>
             </div>
