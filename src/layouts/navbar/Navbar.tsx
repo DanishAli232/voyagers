@@ -1020,7 +1020,7 @@ const Navbar = (props: Props) => {
 
                     <ul
                       className="dropdown-menu dropdown-menu-large row"
-                      style={{ maxHeight: "70vh", overflowY: "auto" }}
+                      style={{ maxHeight: "70vh", overflowY: "auto", top: "-20px" }}
                     >
                       {Object.entries(cities).map(([key, val]) => (
                         <li className="col-sm-6">
