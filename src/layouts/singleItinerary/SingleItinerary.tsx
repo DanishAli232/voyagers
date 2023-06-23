@@ -43,6 +43,7 @@ const SingleItinerary = (props: any) => {
   const [isMy, setIsMy] = useState(false);
   const [purchasedItineraries, setPurchasedItineraries] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState<{ role?: string; username?: string; _id?: string }>({});
 
   const navigate = useNavigate();
 
@@ -92,6 +93,7 @@ const SingleItinerary = (props: any) => {
     try {
       let user = await api("/users/get-profile");
       setPurchasedItineraries(user.data.user.boughtItineraries);
+      setProfile(user.data);
     } catch (error) {
       console.log(error);
     }
@@ -136,7 +138,7 @@ const SingleItinerary = (props: any) => {
                         ) : (
                           ""
                         )}
-                        {purchasedItineraries.includes(itineraryId) || isMy ? (
+                        {data?.userId?.role === "seller" ? (
                           ""
                         ) : (
                           <div className="col-md-3 col-sm-3 col-xs-4">

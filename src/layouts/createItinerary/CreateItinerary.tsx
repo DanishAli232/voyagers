@@ -595,6 +595,7 @@ const CreateItinerary = (props: Props) => {
                 <img src={upload} alt="Upload" />
               )}
               <p>Drag your thumbnail here</p>
+
               <div>
                 <input id="thumbnail" type="file" style={{ display: "none" }} onChange={handleFileChange} />
                 <label htmlFor="thumbnail" style={{ textDecoration: "underline" }}>

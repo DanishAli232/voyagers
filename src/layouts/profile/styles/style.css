@@ -1,0 +1,28 @@
+.main-profile {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  flex-direction: column;
+}
+
+.main-profile .dp {
+  margin-top: 20px;
+  width: 70%;
+  max-width: 300px;
+  max-height: 300px;
+  display: block;
+  margin: auto;
+}
+
+.main-profile .btn-upload {
+  display: block;
+  margin: auto;
+  margin-top: 10px;
+}
+
+.main-profile .btn {
+  width: 100%;
+  margin-top: 20px;
+}

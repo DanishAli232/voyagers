@@ -7,6 +7,7 @@ import StripeConnect from "./layouts/stripe/StripeConnect";
 import AuthGuardRoute from "./components/AuthGuardRoute";
 import { getUserRole } from "./utils/utils";
 import EditItinerary from "./layouts/editItinerary/EditItinerary";
+import EditProfile from "./layouts/profile/EditProfile";
 
 const Home = lazy(() => import("./layouts/home/Home"));
 const CreateItinerary = lazy(() => import("./layouts/createItinerary/CreateItinerary"));
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
       { path: "/itinerary/me", element: <ProtectedRoute Element={MyItineraries} /> },
       { path: "/itinerary/view/:itineraryId", element: <ProtectedRoute Element={SingleItinerary} /> },
       { path: "/itinerary/edit/:itineraryId", element: <ProtectedRoute Element={EditItinerary} /> },
+      { path: "/profile/edit", element: <ProtectedRoute Element={EditProfile} /> },
     ],
   },
 ]);
