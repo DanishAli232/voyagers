@@ -949,9 +949,9 @@ const Navbar = (props: Props) => {
     else setIsLoggedIn(false);
   };
 
-  const handleShowDropdown = (e: MouseEvent<HTMLLIElement>) => {
+  const handleShowDropdown = (e: MouseEvent<HTMLLIElement>, type: boolean) => {
     e.preventDefault();
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen(type);
   };
 
   const handleLogout = () => {
@@ -995,14 +995,14 @@ const Navbar = (props: Props) => {
               </Link>
             </div>
 
-            <div
-              className="collapse navbar-collapse"
-              id="myNavbar"
-              style={{ display: "flex!important", alignItems: "center" }}
-            >
+            <div className="collapse navbar-collapse" id="myNavbar">
               <ul
                 className="nav navbar-nav"
-                style={{ display: "flex", alignItems: "center", marginTop: 0, marginLeft: "20%" }}
+                style={
+                  user.role === "seller"
+                    ? { display: "flex", alignItems: "center", marginTop: 0, marginLeft: "20%" }
+                    : {}
+                }
               >
                 <li className="active">
                   <Link to="/">Home</Link>
@@ -1010,8 +1010,8 @@ const Navbar = (props: Props) => {
 
                 {user.role === "user" ? (
                   <li
-                    onMouseLeave={handleShowDropdown}
-                    onMouseEnter={handleShowDropdown}
+                    onMouseLeave={(e) => handleShowDropdown(e, false)}
+                    onMouseEnter={(e) => handleShowDropdown(e, true)}
                     className={`dropdown dropdown-large${isDropdownOpen ? " open" : ""}`}
                   >
                     <a style={{ margin: 0, padding: "15px" }} className="dropdown-toggle btn" data-toggle="dropdown">
@@ -1061,11 +1061,15 @@ const Navbar = (props: Props) => {
                 <li>
                   <a href="#">Contact us</a>
                 </li>
-                <li>
-                  <Link to="/itinerary/create">
-                    <button className="btn btn-orange navbar-btn">Create Itinerary</button>
-                  </Link>
-                </li>
+                {user.role === "seller" ? (
+                  <li>
+                    <Link to="/itinerary/create">
+                      <button className="btn btn-orange navbar-btn">Create Itinerary</button>
+                    </Link>
+                  </li>
+                ) : (
+                  ""
+                )}
               </ul>
 
               {isLoggedIn ? (
@@ -1074,13 +1078,17 @@ const Navbar = (props: Props) => {
                     className={`nav navbar-nav navbar-right dropdown dropdown-toggle ${profileOpen ? " open" : ""}`}
                     data-toggle="dropdown"
                     onClick={() => setProfileOpen(!profileOpen)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      marginTop: "-68px",
-                    }}
+                    style={
+                      user.role === "seller"
+                        ? {
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                            marginTop: "-68px",
+                          }
+                        : {}
+                    }
                   >
                     <li>
                       <img width="44px" height="44px" src={user.image || dp} alt="Display Picture" />

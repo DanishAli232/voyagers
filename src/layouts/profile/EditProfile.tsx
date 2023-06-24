@@ -34,6 +34,7 @@ const EditProfile = (props: Props) => {
       });
 
       await api.patch("/users", formData);
+      window.location.href = process.env.PUBLIC_URL;
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,6 +58,7 @@ const EditProfile = (props: Props) => {
           };
         };
       };
+
       let { email, username, image } = user.data.user;
       setProfile(user.data);
       setValues({ email, username, image });

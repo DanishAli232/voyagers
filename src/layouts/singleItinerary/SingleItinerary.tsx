@@ -138,7 +138,7 @@ const SingleItinerary = (props: any) => {
                         ) : (
                           ""
                         )}
-                        {data?.userId?.role === "seller" ? (
+                        {profile.role === "seller" ? (
                           ""
                         ) : (
                           <div className="col-md-3 col-sm-3 col-xs-4">
