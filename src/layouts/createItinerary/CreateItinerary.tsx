@@ -1,4 +1,4 @@
-import { ChangeEvent, DragEvent, FormEvent, ReactElement, useState } from "react";
+import { ChangeEvent, DragEvent, FormEvent, ReactElement, useEffect, useState } from "react";
 
 import api from "../../utils/api";
 
@@ -300,6 +300,17 @@ const CreateItinerary = (props: Props) => {
     setDayForDelete(null);
     setDays(days - 1);
   };
+
+  const getUserDetails = async () => {
+    let data = await api("/billing/user-details");
+    if (!data?.data?.isCompleted) {
+      return navigate("/stripe/connect");
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
   return (
     <div className="container">

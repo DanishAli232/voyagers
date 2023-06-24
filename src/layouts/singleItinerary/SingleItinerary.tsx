@@ -93,7 +93,7 @@ const SingleItinerary = (props: any) => {
     try {
       let user = await api("/users/get-profile");
       setPurchasedItineraries(user.data.user.boughtItineraries);
-      setProfile(user.data);
+      setProfile(user.data.user);
     } catch (error) {
       console.log(error);
     }
@@ -168,7 +168,9 @@ const SingleItinerary = (props: any) => {
             data.eachDetail?.map((each) => (
               <section className="dt-deatils">
                 <div className="container">
-                  <h4 style={{ marginBottom: "20px" }}>Day {each.day}</h4>
+                  <h4 style={{ marginBottom: "20px" }}>
+                    Day {each.day} - {each.dayTitle}
+                  </h4>
                   <div className="row">
                     <div className="col-md-12">
                       <div className="details-tabs">
