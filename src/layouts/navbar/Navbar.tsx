@@ -980,7 +980,6 @@ const Navbar = (props: Props) => {
     getUser();
     verifyLogin();
   }, [location]);
-  console.log(user);
 
   const handleProfileOpen = () => {
     navigate("/profile/edit");
@@ -1116,7 +1115,7 @@ const Navbar = (props: Props) => {
 
                     <ul className="dropdown-menu profile-dropdown">
                       <li onClick={handleProfileOpen}>Edit Profile</li>
-                      {!user.stripeConnected && <li onClick={handleStripeOnboarding}>Complete Onboarding</li>}
+                      {user.stripeConnected === false && <li onClick={handleStripeOnboarding}>Complete Onboarding</li>}
                       <li onClick={handleLogout}>Logout</li>
                     </ul>
                   </ul>
