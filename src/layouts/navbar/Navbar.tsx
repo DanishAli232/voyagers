@@ -1115,7 +1115,11 @@ const Navbar = (props: Props) => {
 
                     <ul className="dropdown-menu profile-dropdown">
                       <li onClick={handleProfileOpen}>Edit Profile</li>
-                      {user.stripeConnected === false && <li onClick={handleStripeOnboarding}>Complete Onboarding</li>}
+                      {user.role === "seller" && user.stripeConnected === false ? (
+                        <li onClick={handleStripeOnboarding}>Complete Onboarding</li>
+                      ) : (
+                        ""
+                      )}
                       <li onClick={handleLogout}>Logout</li>
                     </ul>
                   </ul>
