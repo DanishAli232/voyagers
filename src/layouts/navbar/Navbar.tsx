@@ -935,10 +935,17 @@ const Navbar = (props: Props) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ role: string; _id: string; username: string; image: string }>({
+  const [user, setUser] = useState<{
+    role: string;
+    _id: string;
+    username: string;
+    image: string;
+    stripeConnected: boolean | null;
+  }>({
     role: "",
     _id: "",
     username: "",
+    stripeConnected: null,
     image: "",
   });
 
@@ -973,9 +980,15 @@ const Navbar = (props: Props) => {
     getUser();
     verifyLogin();
   }, [location]);
+  console.log(user);
 
   const handleProfileOpen = () => {
     navigate("/profile/edit");
+  };
+
+  const handleStripeOnboarding = async () => {
+    const stripe_data = await api("/billing/get-account-links");
+    window.location.href = stripe_data.data;
   };
 
   return (
@@ -1103,6 +1116,7 @@ const Navbar = (props: Props) => {
 
                     <ul className="dropdown-menu profile-dropdown">
                       <li onClick={handleProfileOpen}>Edit Profile</li>
+                      {!user.stripeConnected && <li onClick={handleStripeOnboarding}>Complete Onboarding</li>}
                       <li onClick={handleLogout}>Logout</li>
                     </ul>
                   </ul>
