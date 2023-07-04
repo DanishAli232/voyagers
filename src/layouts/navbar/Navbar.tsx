@@ -1068,11 +1068,13 @@ const Navbar = (props: Props) => {
                 )}
 
                 <li>
-                  <a href="#">About us</a>
+                  <Link to="/about-us">About us</Link>
                 </li>
+                
                 <li>
-                  <a href="#">Contact us</a>
+                  <Link to="/contact-us">Contact us</Link>
                 </li>
+
                 {user.role === "seller" ? (
                   <li>
                     <Link to="/itinerary/create">

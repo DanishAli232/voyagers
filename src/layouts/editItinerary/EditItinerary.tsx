@@ -984,19 +984,19 @@ const EditItinerary = (props: Props) => {
                                   </label>
                                 </li>
                                 <li onClick={() => changeServices("room service", item.day)}>
-                                  <input type="checkbox" />
+                                  <input checked={item.services.includes("room service")} type="checkbox" />
                                   <label className="container-radio">Room Service</label>
                                 </li>
                                 <li onClick={() => changeServices("wifi", item.day)}>
-                                  <input type="checkbox" />
+                                  <input type="checkbox" checked={item.services.includes("wifi")} />
                                   <label className="container-radio">Wifi</label>
                                 </li>
                                 <li onClick={() => changeServices("mini bar", item.day)}>
-                                  <input type="checkbox" />
+                                  <input type="checkbox" checked={item.services.includes("mini bar")} />
                                   <label className="container-radio">Mini Bar</label>
                                 </li>
                                 <li onClick={() => changeServices("bath tub & shower", item.day)}>
-                                  <input type="checkbox" />
+                                  <input type="checkbox" checked={item.services.includes("bath tub & shower")} />
                                   <label className="container-radio">Bath Tub & Shower</label>
                                 </li>
                               </ul>

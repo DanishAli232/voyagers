@@ -1,0 +1,18 @@
+#AboutUs {
+  margin: auto;
+  margin-top: 100px;
+  max-width: 80%;
+  text-align: justify;
+}
+
+#AboutUs li {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#AboutUs li:before {
+  content: "\25E6"; /* Unicode representation of ◦ */
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}

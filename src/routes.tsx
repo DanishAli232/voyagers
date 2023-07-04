@@ -8,6 +8,8 @@ import AuthGuardRoute from "./components/AuthGuardRoute";
 import { getUserRole } from "./utils/utils";
 import EditItinerary from "./layouts/editItinerary/EditItinerary";
 import EditProfile from "./layouts/profile/EditProfile";
+import AboutUs from "./layouts/aboutUs/AboutUs";
+import ContactUs from "./layouts/contactUs/ContactUs";
 
 const Home = lazy(() => import("./layouts/home/Home"));
 const CreateItinerary = lazy(() => import("./layouts/createItinerary/CreateItinerary"));
@@ -34,6 +36,26 @@ const router = createBrowserRouter([
   {
     path: "/auth/sign-up",
     element: <SignUp />,
+  },
+  {
+    path: "/about-us",
+    element: (
+      <>
+        <Navbar />
+        <AboutUs />
+        <Footer />
+      </>
+    ),
+  },
+  {
+    path: "/contact-us",
+    element: (
+      <>
+        <Navbar />
+        <ContactUs />
+        <Footer />
+      </>
+    ),
   },
   {
     path: "/stripe/connect",

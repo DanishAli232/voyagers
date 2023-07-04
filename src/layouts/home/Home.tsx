@@ -283,7 +283,7 @@ const Home = () => {
                 >
                   <div className="panel-heading">
                     <h4 className="panel-title">
-                      HOW TO USE MY VOYAGES? <i className="fa fa-angle-down"></i>
+                      What is My Voyages? <i className="fa fa-angle-down"></i>
                     </h4>
                   </div>
                   <div
@@ -294,13 +294,17 @@ const Home = () => {
                   >
                     <div className="panel-body">
                       <p className="text-bg">
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                        printer took a galley of type and scrambled it to make a type specimen book.
+                        My Voyages simplifies travel planning through social interaction. We get it! Between
+                        time-consuming planning and wasted money on unreliable reviews, you could easily browse between
+                        8-10 different websites and apps. Welcome to travel planning made simple, enjoyable, and
+                        efficient for the modern traveler. You can trust our authentic reviews because they’re from
+                        like-minded users like you worldwide.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+
               <div className="panel-group" id="accordion">
                 <div
                   className={`panel panel-default ${currentTab === 1 ? "" : "collapsed"}`}
@@ -312,7 +316,7 @@ const Home = () => {
                 >
                   <div className="panel-heading">
                     <h4 className="panel-title">
-                      WHAT DO VOYAGERS DO? <i className="fa fa-angle-down"></i>
+                      What do Voyagers do? <i className="fa fa-angle-down"></i>
                     </h4>
                   </div>
                   <div
@@ -323,8 +327,9 @@ const Home = () => {
                   >
                     <div className="panel-body">
                       <p className="text-bg">
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                        printer took a galley of type and scrambled it to make a type specimen book.
+                        Voyagers can now browse vetted itineraries around the world from some of your favorite travel
+                        personalities. If you like what you see, then buy the itinerary, and save yourself hours of
+                        research and app browsing.
                       </p>
                     </div>
                   </div>
@@ -342,7 +347,7 @@ const Home = () => {
                 >
                   <div className="panel-heading">
                     <h4 className="panel-title">
-                      OPPORTUNITIES FOR VOYAGERS?<i className="fa fa-angle-down"></i>
+                      What is My Voyages Concierge?<i className="fa fa-angle-down"></i>
                     </h4>
                   </div>
                   <div
@@ -353,13 +358,47 @@ const Home = () => {
                   >
                     <div className="panel-body">
                       <p className="text-bg">
-                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                        printer took a galley of type and scrambled it to make a type specimen book.
+                        For an additional fee, you will be matched with a MV travel expert whose expertise is in where
+                        you are headed. You are provided your own personal concierge from planning to experience in a
+                        fashion that can only be found at My Voyages.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <div className="panel-group" id="accordion">
+                <div
+                  className={`panel panel-default ${currentTab === 3 ? "" : "collapsed"}`}
+                  onClick={() => (currentTab === 3 ? setCurrentTab(null) : setCurrentTab(3))}
+                  data-target="#collapsethr"
+                  data-toggle="collapse"
+                  data-parent="#accordion"
+                  aria-expanded="false"
+                >
+                  <div className="panel-heading">
+                    <h4 className="panel-title">
+                      I want to become a trusted My Voyages Seller?<i className="fa fa-angle-down"></i>
+                    </h4>
+                  </div>
+                  <div
+                    id="collapsethr"
+                    className={`panel-collapse collapse ${currentTab === 3 ? "in" : ""}`}
+                    aria-expanded="false"
+                    style={{ height: currentTab === 3 ? "auto" : "0px", transition: "2s all" }}
+                  >
+                    <div className="panel-body">
+                      <p className="text-bg">
+                        Does everyone come to you for travel ideas, or restaurant ideas, or just for the vibes in
+                        general? Do you want to finally make money for putting together those fantastic experiences
+                        together for other people. If this sounds like you, send us an email at: info@myvoyages.com and
+                        we will reach out to you with next steps.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* <div className="text-center">
                 <button className="btn org-faq">
                   Show more <i className="fa fa-angle-down"></i>
