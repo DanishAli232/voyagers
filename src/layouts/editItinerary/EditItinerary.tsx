@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import "./assets/styles/index.css";
 import "./assets/styles/carousel.css";
 import upload from "./assets/images/Upload.png";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type Params = { itineraryId: string };
 
@@ -45,6 +45,7 @@ const EditItinerary = (props: Props) => {
   const [isErrored, setIsErrored] = useState<any>({});
   const [currentTab, setCurrentTab] = useState(0);
   const [dayForDelete, setDayForDelete] = useState<number | null>(null);
+  const navigate = useNavigate();
   const [values, setValues] = useState<Values>({
     country: "",
     category: [],
@@ -271,6 +272,8 @@ const EditItinerary = (props: Props) => {
       // Make the POST request using Axios
       const response = await api.patch(`/itinerary/${itineraryId}`, formData);
       console.log(response.data); // Handle the server response
+
+      navigate(`/itinerary/view/${itineraryId}`);
 
       // Reset the form or perform any other necessary actions
     } catch (error: any) {
